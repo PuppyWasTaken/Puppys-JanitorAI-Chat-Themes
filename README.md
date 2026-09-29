@@ -31,6 +31,8 @@ CSS injection browser extension to make your JanitorAI chats look nicer. Applies
 
 
 ## How To Use
+⚠️ Make sure to add a chat background & assign text colours through the native customization menu in your JanitorAI chat. This ensures the themes will work properly.
+![Customization](https://file.garden/aWyedZylm2AE_XoC/Extension%20Theme%20Demos/CustomizationWalkthru.png)
 
 Extension Popup in your browser:
 ![Popup Walkthrough](https://file.garden/aWyedZylm2AE_XoC/Extension%20Theme%20Demos/PopupWalkThru.png)
