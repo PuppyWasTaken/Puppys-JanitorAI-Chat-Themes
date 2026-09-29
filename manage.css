@@ -1,0 +1,60 @@
+body.manage-page {
+  width: auto;
+  min-height: 100vh;
+  padding: 32px 16px;
+  background: #e6e1d7;
+  box-sizing: border-box;
+}
+
+.manage-wrap {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+body.manage-page h1 {
+  font-size: 20px;
+}
+
+body.manage-page h2 {
+  font-size: 15px;
+}
+
+body.manage-page .radio-input,
+body.manage-page .text-color-list {
+  max-height: none;
+}
+
+body.manage-page .radio-label {
+  font-size: 14px;
+}
+
+/* Text backgrounds: label + status + picker + None/Reset. Wraps so the
+   two buttons drop under the label on narrow windows. */
+body.manage-page .bg-row {
+  flex-wrap: wrap;
+}
+
+body.manage-page .bg-status {
+  font-size: 12px;
+  opacity: 0.65;
+  min-width: 70px;
+}
+.settingscredits{
+	margin-top:1rem;
+	display:flex;
+	flex-direction:column;
+	width:auto;
+	align-items: center;
+    gap: 3px;
+}
+.settingscredits span{
+	color:#5c554a;
+}
+.settingscredits a{
+	color:#8db6b5;
+	text-decoration:underline dashed 1px;
+}
+.links{
+	justify-content: center;
+    gap: 1rem;
+}

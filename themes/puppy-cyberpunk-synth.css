@@ -1,0 +1,345 @@
+/* ========= SynthCyber Chat Theme by Permanent/Puppy ======= */ 
+/* For personal use only!!! Not for commercial use or sale. Do not redistribute without permission. */ 
+/* image assets AI generated */
+/* last update: 09/26/2026 */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech&family=Share+Tech+Mono&display=swap');
+
+
+/* background */ 
+[class*="_chatLayoutBackground_"]{
+    --blur-amount: 6px;
+    background-image: url(https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/pupcyberbg)!important;
+    opacity: 0.65;
+}
+
+/* chat box container */
+[class*="chatInputInner_"] {
+    border-image: url(https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/pupcyberchatborder.png) 100;
+    border-width: 48px;
+    border-radius: 0;
+    background: transparent;
+    position: relative;
+    backdrop-filter: none !important;
+    box-shadow: none;
+    max-width: 36rem;
+    JUSTIFY-CONTENT: space-between;
+    margin-left: 6vmin;
+    min-height: 12vh;
+    
+}
+[class*="chatInputInner_"]::before {
+    content: '';
+    position: absolute;
+    background: linear-gradient(45deg, #01ffff54, #00b3ff57);
+    width: calc(100% + 4rem);
+    height: calc(100% + 4rem);
+    top: -2rem;
+    left: -2rem;
+    z-index: -1;
+    pointer-events: none;
+    backdrop-filter: blur(6px);
+}
+
+[class*="chatTextarea_"]{padding:0;padding-top:1rem;}
+[class*="controlsRow_"] {
+    padding: 0;
+    position: absolute;
+    top: -2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+[class*="chatTextarea_"]::placeholder, [class*="chatTextarea_"]  {
+   font-family: "Share Tech Mono", monospace;
+}
+[class*="sendButton_"]:disabled{
+    border: 1px solid #1e191a;
+    border-radius: 0;
+    background: #f105ff59;
+    box-shadow: 0 0 5px #00f3ff inset, 0 0 5px #00f3ff;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+[class*="sendButton_"]:not(:disabled), [class*="sendButton_"]{
+    border: 1px solid #1e191a;
+    border-radius: 0;
+    background: #00f3ff;
+    box-shadow: 0 0 5px #00f3ff inset, 0 0 5px #00f3ff;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+[class*="sendButton_"] svg{
+    color:black!important;
+}
+
+:is([class*="menuButton_"],[class*="controlsRow_"]) svg {
+    color: #05e2ff;
+}
+[class*="chatInputWrapper_"]{padding-bottom:0.5rem;}
+button[aria-label="Scroll to bottom"]{
+    border: 2px solid #05d9e8;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 15px #05d9e8, inset 0 0 10px #05d9e8;
+    background: #01012b;
+}
+button[aria-label="Scroll to bottom"] svg{color:#ff2a6d!important;stroke-width :4;transition:opacity 300ms ease;opacity:1;}
+button[aria-label="Scroll to bottom"]:is(:hover,:focus,:active) svg{opacity:0;}
+button[aria-label="Scroll to bottom"]::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -10px;
+    right: -10px;
+    height: 2px;
+    opacity:0;
+    background: #ff2a6d;
+    transform: translateY(-50%);
+    transition: opacity 300ms ease-in-out;
+}
+button[aria-label="Scroll to bottom"]::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    bottom: -10px;
+    width: 2px;
+    opacity:0;
+    background: #ff2a6d;
+    transform: translateX(-50%);
+    transition: opacity 300ms ease-in-out;
+}
+button[aria-label="Scroll to bottom"]:is(:hover,:focus,:active)::after,button[aria-label="Scroll to bottom"]:is(:hover,:focus,:active)::before{
+    opacity:1;
+}
+
+/* chat message styling */
+[class*="_messageBody_"] p{
+    font-family: "Share Tech", sans-serif!important;
+    color: #fb789a;
+    font-size: 1rem;
+    font-weight: 500;
+}
+[class*="messageBody_"] code:not(pre > code) {
+    color: #0d112b;
+    background: #fe8aae;
+    padding: 0.2rem;
+    font-family:'Share Tech Mono';
+    font-weight:600;
+    border-radius: 0px;
+}
+[class*="messageBody_"] em{
+    color:#bf92ff;
+    font-weight: 700;
+}
+[class*="messageBody_"] strong{
+    color:#ff0095;
+    font-weight:1000;
+}
+
+[class*="messageBody_"] span{
+    color:#00dee2!important;
+    background: #6e5de0a3;
+    text-decoration: underline solid 1px;
+    border-top: 1px solid #00dee2;
+}
+svg{
+    color: #05e2ff!important;
+}
+hr{
+    background: repeating-linear-gradient(-45deg, #000, #000 10px, #f1f000 10px, #f1f000 20px);
+    border-top: 1px solid #f1f000;
+    border-bottom: 1px solid #f1f000;
+    height:0.3rem;
+    position:relative;
+    margin-bottom:0.5rem;
+}
+hr::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left:-5px;
+    bottom: 0;
+    width: 5px;
+    background: #ff2a6d;
+}
+hr::after {
+    content: '';
+    right: -5px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: #ff2a6d;
+}
+
+[class*="messageFooterActions_"] button, [class*="messageControls_"] button{
+    border-radius:0!important;
+    background: rgba(5, 21, 37, 0.7);
+    position: relative;
+    border-top: 1px solid #05d9e8;
+    border-bottom: 1px solid #05d9e8;
+    color: #05d9e8;
+    text-shadow: 0 0 4px #05d9e8;
+}
+:is([class*="messageFooterActions_"], [class*="messageControls_"]) button::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid #ff2a6d;
+    border-left: 2px solid #ff2a6d;
+    box-shadow: -4px -4px 10px rgba(255, 42, 109, 0.5);
+}
+:is([class*="messageFooterActions_"], [class*="messageControls_"]) button::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    border-bottom: 2px solid #ff2a6d;
+    border-right: 2px solid #ff2a6d;
+    box-shadow: 4px 4px 10px rgba(255, 42, 109, 0.5);
+}
+[class*="messageFooterActions_"], [class*="controlPanel_"]{
+    gap:1rem;
+}
+
+[class*="messageAvatarImage_"][class*="borderRadiusSm_"], [class*="messageAvatarImage_"]{
+    border-radius: 0%;
+    object-position:top;
+}
+[class*="messageAvatarImage_"]{
+    position:relative;
+	width:100px;
+	height:100%;
+    border:2px solid white;
+    border-image: linear-gradient(to right, #1bd1ff,#16aeff, #ff52ff) 1;
+    filter: drop-shadow(-2px 0px 4px #1bd1ff) drop-shadow(2px 0 4px #ff52ff);
+}
+[aria-label="Open avatar image"]{position:relative;}
+[aria-label="Open avatar image"]::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(-2px 0px 4px #1bd1ff) drop-shadow(2px 0 4px #ff52ff);
+    rotate: -6deg;
+    top: -3px;
+    left: -3px;
+    display: block;
+    position: absolute;
+    border:2px solid white;
+    border-image: linear-gradient(to right, #1bd1ff,#16aeff, #ff52ff) 1;
+}
+[class*="messageAvatarContainer_"]::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background-size: 115px 115px;
+    background-repeat: no-repeat;
+    inset: 0;
+    top: -5px;
+    left: 3px;
+    pointer-events: none;
+}
+
+[class*="messageBody_"] {
+    padding: 1rem;
+    border-radius: 0;
+    backdrop-filter: blur(13px);
+    background-color: #01012bad;
+    background-image: linear-gradient(transparent 95%, #b026ffad 100%), linear-gradient(90deg, transparent 95%, rgba(5, 217, 232, 0.2) 100%);
+    background-size: 30px 30px;
+}
+[class*="nameText_"] {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 2rem;
+    color: #ffffff;
+    text-shadow: 1px 1px 5px #2d1cff, -1px -1px 5px #fc1dff;
+}
+[class*="frameContainer_"]{
+    display:none;
+}
+
+[class*="messagesMain_"]>div::-webkit-scrollbar-thumb {
+    background: linear-gradient(#ff52ff9e, #1bd1ff96);
+    border-radius: 0;
+}
+
+/* header */
+[class*="headerContainer_"] {
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    padding: 0 2rem;
+    flex-direction: row;
+}
+[class*="headerGrid_"], [class*="customDivider_"] {
+    display: contents;
+}
+[class*="headerGrid_"] {
+    width: 100%;
+    max-width: unset;
+}
+[class*="headerGrid_"]>div:nth-child(1):has(button) {
+    order: 1;
+}
+[class*="headerGrid_"]>div>button>span {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.8rem !important;
+    font-style: italic;
+}
+[class*="accordionContainer_"] {
+    position: absolute;
+}
+[class*="customDividerText_"] {
+    order: 2;
+    display: flex;
+    flex: 1 1 100%;
+    justify-content: center;
+    align-items: center;
+}
+#character-name-button, [class*="customDividerText_"] {
+    font-family: "Share Tech Mono", monospace!important;
+    font-weight: bold !important;
+    font-size: clamp(1rem, 0.4444rem + 1.7778vw, 2rem) !important;
+}
+[class*="customDividerText_"] span:has(svg){display:none;}
+[class*="customDividerText_"]{margin-top:0.5rem}
+[class*="disclaimer_"]>span {
+    font-family: "Share Tech Mono", monospace;
+    font-weight: 200;
+    font-style: italic;
+}
+[class*="disclaimer_"], [class*="apiTag_"][class*="ready_"] {
+    background: #2a5c7380;
+    border-radius: 0;
+    border: 1px solid #00b3ff57;
+}
+[class*="apiTag_"][class*="ready_"] {
+    font-family: "Share Tech Mono", monospace;
+    font-weight: 200;
+    font-style: italic;
+}
+[class*="menuWrapper_"]{order:3;}
+img[alt="clouds left"], img[alt="clouds right"], img[alt="User Avatar Border"]{visibility:hidden;}
+[class*="messageControls_"]{top: 1rem;
+    right: 2rem;}
+
+[class*="soundcloudPlayer_"]{
+    position: absolute;
+    top: 4rem;
+    background: linear-gradient(45deg, #5d9ae0a6, #000000bd);
+}
+[class*="soundcloudResponsive_"]{filter: sepia(1) grayscale(1) invert(1) !important;}
+[class*="switcher_"]{    
+    background: #f502ff40;
+    border: 1px solid #05e2ff;
+    border-radius:0;
+    transition: all 400ms ease;
+}
+[class*="switcher_"]:hover{background:#5f91cc61;border-color:white;}
+[class*="triggerName_"]{font-family: "Share Tech", sans-serif;}
+
