@@ -330,7 +330,9 @@ hr{
     padding:0.1rem;
 }
 
-[class*="messageBody_"]>div:nth-child(2){
+[class*="thinkTagContainer_"]{display:none;}
+
+[class*="messageBody_"]>div:nth-child(2),[class*="messageBody_"]:has([class*="thinkTagContainer_"])>div:nth-child(3){
     padding-left:0.5rem;
     padding-top:0.5rem;
     background: white;
