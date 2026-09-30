@@ -1,41 +1,9 @@
-/**
- * settings-panel.js
- * -----------------
- * All the logic behind the theme picker (radio buttons, one active theme
- * at a time, from THEMES — see themes-manifest.js), the background-image
- * URL field, one color picker per text slot (from TEXT_SLOTS), and (on
- * manage.html only) the "which themes show up in the popup" checkbox
- * picker. All backed by chrome.storage.local. content.js listens for
- * storage changes and re-applies styles on the active tab automatically,
- * so this file only needs to read/write storage.
- *
- * Shared between popup.html (popup.js) and manage.html (manage.js) — both
- * pages have the same theme-list / bg-url / reset-bg / text-color-list
- * element ids, so the same initSettingsPanel() call wires up either one.
- * manage.html additionally has a #popup-theme-picker element; popup.html
- * doesn't, and that picker is skipped when it's absent.
- *
- * Per-theme storage: background URL and text colors live under
- * STORAGE_KEYS.perThemeOverrides, keyed by theme id (see
- * themes-manifest.js) — switching from Theme A to Theme B and back
- * restores whatever was saved for each theme individually, instead of
- * one shared set of values applying to every theme.
- */
-
-// Set once initSettingsPanel() has wired up this document's fields, so
-// onThemeSelect()/clearActiveTheme() — both fired from theme-list radios
-// that don't otherwise know about the bg-url/text-color fields — can ask
-// this document to refresh them after a theme switch.
 let panel = null;
 
 function renderThemeList(themeListEl, activeThemeId, themes) {
   themeListEl.innerHTML = "";
   themes.forEach((theme) => {
-    // Every .input must be a direct sibling of the others (not nested in
-    // its own wrapper) — the "checked ~ .input" chain-glow CSS relies on
-    // the general sibling combinator, which only matches elements that
-    // share the same parent. The label is linked via for="" instead of
-    // wrapping the input, so it stays flat too.
+
     const radio = document.createElement("input");
     radio.type = "radio";
     radio.name = "active-theme";
@@ -54,13 +22,6 @@ function renderThemeList(themeListEl, activeThemeId, themes) {
   });
 }
 
-// Flips .checked on the radios that already exist, instead of tearing the
-// list down and rebuilding it. This matters for more than efficiency: the
-// glow-travel CSS animates a *property change on a persisting element* —
-// destroying and recreating the inputs (as renderThemeList does) gives the
-// browser no "before" state to transition from, so the new element just
-// paints straight to its final look. Every storage-driven sync after the
-// first render must go through this instead of renderThemeList.
 function updateThemeSelection(themeListEl, activeThemeId) {
   themeListEl.querySelectorAll('input.input[type="radio"]').forEach((radio) => {
     const themeId = radio.id.replace(/^theme-radio-/, "");
@@ -73,37 +34,34 @@ async function onThemeSelect(themeId) {
   if (panel) await panel.refreshOverrideFields(themeId);
 }
 
-// Used by the yellow traffic-light dot: drops activeTheme from storage
-// entirely (not just visually) so content.js's applyState() sees a null
-// activeThemeId and strips the injected theme + overrides from the page,
-// same as if no theme had ever been picked. updateThemeSelection(el, null)
-// then unchecks every radio in this document since none can match a null id.
 async function clearActiveTheme(themeListEl) {
   await chrome.storage.local.remove(STORAGE_KEYS.activeTheme);
   updateThemeSelection(themeListEl, null);
   if (panel) await panel.refreshOverrideFields(null);
 }
 
-// ---- Per-theme background URL + text color storage ----
+let overrideWriteQueue = Promise.resolve();
 
-async function setPerThemeField(themeId, field, value) {
-  if (!themeId) return; // no active theme to attach this override to
-  const data = await chrome.storage.local.get([STORAGE_KEYS.perThemeOverrides]);
-  const all = { ...(data[STORAGE_KEYS.perThemeOverrides] || {}) };
-  all[themeId] = { ...(all[themeId] || {}), [field]: value };
-  await chrome.storage.local.set({ [STORAGE_KEYS.perThemeOverrides]: all });
+function updatePerThemeOverrides(themeId, update) {
+  if (!themeId) return Promise.resolve();
+  const write = overrideWriteQueue.then(async () => {
+    const data = await chrome.storage.local.get([STORAGE_KEYS.perThemeOverrides]);
+    const all = { ...(data[STORAGE_KEYS.perThemeOverrides] || {}) };
+    const entry = { ...(all[themeId] || {}) };
+    update(entry);
+    all[themeId] = entry;
+    await chrome.storage.local.set({ [STORAGE_KEYS.perThemeOverrides]: all });
+  });
+  overrideWriteQueue = write.catch((error) => console.error("Could not save theme overrides:", error));
+  return write;
 }
 
-async function clearPerThemeField(themeId, field) {
-  if (!themeId) return;
-  const data = await chrome.storage.local.get([STORAGE_KEYS.perThemeOverrides]);
-  const all = { ...(data[STORAGE_KEYS.perThemeOverrides] || {}) };
-  if (all[themeId]) {
-    const entry = { ...all[themeId] };
-    delete entry[field];
-    all[themeId] = entry;
-  }
-  await chrome.storage.local.set({ [STORAGE_KEYS.perThemeOverrides]: all });
+function setPerThemeField(themeId, field, value) {
+  return updatePerThemeOverrides(themeId, (entry) => { entry[field] = value; });
+}
+
+function clearPerThemeField(themeId, field) {
+  return updatePerThemeOverrides(themeId, (entry) => { delete entry[field]; });
 }
 
 async function onBgUrlChange(themeId, value) {
@@ -114,58 +72,38 @@ async function onBgUrlChange(themeId, value) {
   }
 }
 
-async function onTextColorChange(themeId, key, value) {
-  if (!themeId) return;
-  const data = await chrome.storage.local.get([STORAGE_KEYS.perThemeOverrides]);
-  const all = { ...(data[STORAGE_KEYS.perThemeOverrides] || {}) };
-  const textColors = { ...((all[themeId] || {}).textColors || {}), [key]: value };
-  all[themeId] = { ...(all[themeId] || {}), textColors };
-  await chrome.storage.local.set({ [STORAGE_KEYS.perThemeOverrides]: all });
+function onTextColorChange(themeId, key, value) {
+  return updatePerThemeOverrides(themeId, (entry) => {
+    entry.textColors = { ...(entry.textColors || {}), [key]: value };
+  });
 }
 
-async function onTextColorReset(themeId, key) {
-  if (!themeId) return;
-  const data = await chrome.storage.local.get([STORAGE_KEYS.perThemeOverrides]);
-  const all = { ...(data[STORAGE_KEYS.perThemeOverrides] || {}) };
-  if (all[themeId] && all[themeId].textColors) {
-    const textColors = { ...all[themeId].textColors };
+function onTextColorReset(themeId, key) {
+  return updatePerThemeOverrides(themeId, (entry) => {
+    const textColors = { ...(entry.textColors || {}) };
     delete textColors[key];
-    all[themeId] = { ...all[themeId], textColors };
-    await chrome.storage.local.set({ [STORAGE_KEYS.perThemeOverrides]: all });
-  }
+    entry.textColors = textColors;
+  });
 }
 
-// Text *background* colors. Stored as textBgColors[slotKey] = "#rrggbb"
-// or "transparent" (an explicit "no background" — different from being
-// unset, which leaves whatever the theme itself paints there).
-async function onTextBgChange(themeId, key, value) {
-  if (!themeId) return;
-  const data = await chrome.storage.local.get([STORAGE_KEYS.perThemeOverrides]);
-  const all = { ...(data[STORAGE_KEYS.perThemeOverrides] || {}) };
-  const textBgColors = { ...((all[themeId] || {}).textBgColors || {}), [key]: value };
-  all[themeId] = { ...(all[themeId] || {}), textBgColors };
-  await chrome.storage.local.set({ [STORAGE_KEYS.perThemeOverrides]: all });
+function onTextBgChange(themeId, key, value) {
+  return updatePerThemeOverrides(themeId, (entry) => {
+    entry.textBgColors = { ...(entry.textBgColors || {}), [key]: value };
+  });
 }
 
-async function onTextBgReset(themeId, key) {
-  if (!themeId) return;
-  const data = await chrome.storage.local.get([STORAGE_KEYS.perThemeOverrides]);
-  const all = { ...(data[STORAGE_KEYS.perThemeOverrides] || {}) };
-  if (all[themeId] && all[themeId].textBgColors) {
-    const textBgColors = { ...all[themeId].textBgColors };
+function onTextBgReset(themeId, key) {
+  return updatePerThemeOverrides(themeId, (entry) => {
+    const textBgColors = { ...(entry.textBgColors || {}) };
     delete textBgColors[key];
-    all[themeId] = { ...all[themeId], textBgColors };
-    await chrome.storage.local.set({ [STORAGE_KEYS.perThemeOverrides]: all });
-  }
+    entry.textBgColors = textBgColors;
+  });
 }
 
 function isValidHex(value) {
   return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value);
 }
 
-// Accepts "#abc", "#aabbcc", or the same without the leading "#" (typing
-// the "#" is easy to forget), lowercased for consistent storage. Returns
-// null if the result still isn't a valid hex color.
 function normalizeHex(raw) {
   let value = raw.trim();
   if (!value) return null;
@@ -174,18 +112,26 @@ function normalizeHex(raw) {
   return isValidHex(value) ? value : null;
 }
 
-// Renders one color-row per TEXT_SLOTS entry, wired to save against
-// `themeId` — the theme currently shown in this document, not
-// necessarily the one active when the row was first rendered, since a
-// theme switch always re-renders this list from scratch (see
-// applyOverrideFields/refreshOverrideFields in initSettingsPanel).
+
 function renderTextColorList(textColorListEl, themeId, textColors) {
+
+  const renderedTheme = themeId || "";
+  if (textColorListEl.dataset.renderedTheme === renderedTheme) {
+    TEXT_SLOTS.forEach(({ key, defaultColor }) => {
+      const input = document.getElementById(`text-color-${key}`);
+      const value = textColors[key] || defaultColor;
+      // Never reset a focused picker or interrupt a partially typed hex.
+      if (document.activeElement === input) return;
+      if (input.value !== value) input.value = value;
+      input.classList.remove("invalid");
+      const swatch = input.parentElement.querySelector(".color-swatch");
+      if (swatch) swatch.style.backgroundColor = value;
+    });
+    return;
+  }
+  textColorListEl.dataset.renderedTheme = renderedTheme;
   textColorListEl.innerHTML = "";
-  // "hex": plain text input + swatch preview, for popup.html — native
-  // <input type="color"> pickers get killed mid-drag inside a transient
-  // action popup (see README), but a text field has no such problem.
-  // "color" (default): the browser's native picker, for manage.html,
-  // which is a real tab and doesn't have that problem.
+
   const mode = textColorListEl.dataset.inputMode === "hex" ? "hex" : "color";
 
   TEXT_SLOTS.forEach(({ key, label, defaultColor }) => {
@@ -218,8 +164,7 @@ function renderTextColorList(textColorListEl, themeId, textColors) {
           swatch.style.backgroundColor = normalized;
           onTextColorChange(themeId, key, normalized);
         } else {
-          // Don't write a half-typed value to storage — just flag it so
-          // the field is visibly incomplete until it's valid again.
+
           input.classList.add("invalid");
         }
       });
@@ -250,11 +195,22 @@ function renderTextColorList(textColorListEl, themeId, textColors) {
   });
 }
 
-// Renders one row per TEXT_SLOTS entry for the background behind that
-// kind of text (manage.html only). Each row has three states, shown in
-// its status label: "theme default" (nothing stored), a custom color, or
-// "none" (explicit transparent, e.g. to strip the theme's dialogue box).
+
 function renderTextBgList(listEl, themeId, textBgColors) {
+  const renderedTheme = themeId || "";
+  if (listEl.dataset.renderedTheme === renderedTheme) {
+    TEXT_SLOTS.forEach(({ key }) => {
+      const input = document.getElementById(`text-bg-${key}`);
+      if (document.activeElement === input) return;
+      const stored = textBgColors[key];
+      const value = stored && isValidHex(stored) ? stored : "#ffffff";
+      if (input.value !== value) input.value = value;
+      input.parentElement.querySelector(".bg-status").textContent =
+        !stored ? "theme default" : stored === "transparent" ? "none" : stored;
+    });
+    return;
+  }
+  listEl.dataset.renderedTheme = renderedTheme;
   listEl.innerHTML = "";
 
   TEXT_SLOTS.forEach(({ key, label }) => {
@@ -316,12 +272,7 @@ function renderTextBgList(listEl, themeId, textBgColors) {
   });
 }
 
-// ---- Popup theme picker (manage.html only) ----
-// Lets the user choose up to MAX_POPUP_THEMES themes to show as radio
-// options in the compact toolbar popup. Nothing is written to
-// STORAGE_KEYS.preferredThemes until the user touches a checkbox here —
-// until then the popup falls back to the most-recently-added themes
-// (see getPopupThemes() in themes-manifest.js).
+
 
 async function getPreferredThemesOrDefault() {
   const data = await chrome.storage.local.get([STORAGE_KEYS.preferredThemes]);
@@ -341,9 +292,7 @@ function renderPopupThemePicker(containerEl, checkedIds) {
     checkbox.type = "checkbox";
     checkbox.id = `popup-theme-${theme.id}`;
     checkbox.checked = checkedIds.includes(theme.id);
-    // Disable (rather than allow-then-truncate) so it's obvious *why* a
-    // 4th theme won't check — no silent no-op, no need to un-check one
-    // first without feedback.
+
     checkbox.disabled = !checkbox.checked && atMax;
     checkbox.addEventListener("change", () =>
       onPopupThemeToggle(theme.id, checkbox.checked, containerEl)
@@ -385,20 +334,7 @@ async function initPopupThemePicker(containerEl) {
   });
 }
 
-/**
- * Wires up every control in the current document. Call once, after the
- * document's theme-list / bg-url / reset-bg elements exist — works the
- * same whether that document is popup.html or manage.html.
- *
- * text-bg-list (manage.html only) is optional too and renders the
- * per-slot "background behind this text" controls.
- *
- * text-color-list is optional (skipped if absent) and its rendering
- * mode is read from its own data-input-mode attribute: "hex" renders
- * plain text fields (popup.html), anything else renders the browser's
- * native color picker (manage.html). popup-theme-picker is likewise
- * optional and only present on manage.html.
- */
+
 async function initSettingsPanel() {
   const isManagePage = document.body.classList.contains("manage-page");
   const themeListEl = document.getElementById("theme-list");
@@ -418,15 +354,11 @@ async function initSettingsPanel() {
 
   const activeThemeId = data[STORAGE_KEYS.activeTheme] || null;
 
-  // manage.html's theme-list always shows every theme (it's the full
-  // settings page); the popup only shows the user's chosen (or default)
-  // subset, capped at MAX_POPUP_THEMES.
+
   const themesForList = isManagePage ? THEMES : getPopupThemes(data[STORAGE_KEYS.preferredThemes]);
   renderThemeList(themeListEl, activeThemeId, themesForList);
 
-  // Finds whichever theme is checked right now in *this* document's
-  // theme-list, so bg-url/text-color edits always save against the
-  // theme currently shown, even right after a switch.
+
   function currentlyShownThemeId() {
     const checked = themeListEl.querySelector('input.input[type="radio"]:checked');
     return checked ? checked.id.replace(/^theme-radio-/, "") : null;
@@ -436,30 +368,26 @@ async function initSettingsPanel() {
     const { bgImageUrl, textColors, textBgColors } = themeId
       ? getEffectiveOverridesForTheme(storageData, themeId)
       : { bgImageUrl: null, textColors: {}, textBgColors: {} };
-    bgUrlInput.value = bgImageUrl || "";
+    if (document.activeElement !== bgUrlInput) bgUrlInput.value = bgImageUrl || "";
     if (textColorListEl) renderTextColorList(textColorListEl, themeId, textColors);
     if (textBgListEl) renderTextBgList(textBgListEl, themeId, textBgColors);
   }
   paintOverrideFields(activeThemeId, data);
 
-  // Re-fetches storage (rather than trusting the initial `data` snapshot)
-  // so a switch some time after this document loaded still reflects
-  // whatever was most recently saved for the new theme.
+
   async function refreshOverrideFields(themeId) {
     const fresh = await chrome.storage.local.get([
       STORAGE_KEYS.perThemeOverrides,
       STORAGE_KEYS.legacyBgImageUrl,
       STORAGE_KEYS.legacyTextColors
     ]);
-    paintOverrideFields(themeId, fresh);
+
+    if (themeId === currentlyShownThemeId()) paintOverrideFields(themeId, fresh);
   }
 
   panel = { refreshOverrideFields };
 
-  // Save on blur/Enter rather than every keystroke, since a URL isn't
-  // usable until it's complete. Stored under the theme currently shown
-  // in this document, so switching themes never overwrites another
-  // theme's saved background.
+
   bgUrlInput.addEventListener("change", () => {
     onBgUrlChange(currentlyShownThemeId(), bgUrlInput.value.trim());
   });
@@ -471,9 +399,7 @@ async function initSettingsPanel() {
 
   if (popupThemePickerEl) initPopupThemePicker(popupThemePickerEl);
 
-  // Keep this document's controls in sync if storage changes elsewhere —
-  // e.g. the popup is open in one place while manage.html is open in a
-  // tab, or vice versa.
+
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName !== "local") return;
     if (STORAGE_KEYS.activeTheme in changes) {

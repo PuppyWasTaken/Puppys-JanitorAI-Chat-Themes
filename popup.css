@@ -179,7 +179,27 @@ justify-content:space-evenly;
 display:flex;
 width:1.75rem;
 height:1.75rem;
+cursor:pointer;
 transition:all 250ms ease-in-out;
+}
+.links a svg {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.setup-notice {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #6c8584;
+  border-radius: 8px;
+  background: #d6e2dd;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.setup-notice p {
+  margin: 0 0 8px;
 }
 .links a:is(:hover,:focus,:active){
 	scale: 1.2;
