@@ -9,7 +9,7 @@
     "webNavigation"
   ],
   "host_permissions": [
-    "https://janitorai.com/*"
+    "https://janitorai.com/chats/*"
   ],
   "background": {
     "service_worker": "background.js"
