@@ -8,9 +8,9 @@
 
 /* background */ 
 [class*="_chatLayoutBackground_"]{
-    --blur-amount: 6px;
+    --blur-amount: 6px!important;
     background-image: url(https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/pupcyberbg)!important;
-    opacity: 0.65;
+    opacity: 0.65!important;
 }
 
 /* chat box container */

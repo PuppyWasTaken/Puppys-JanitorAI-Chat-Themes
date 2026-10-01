@@ -105,7 +105,7 @@ padding-right:1rem;
     --blur-amount: 4px!important;
     background-image: url(https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppycottagebg)!important;
     opacity: 0.85!important;
-    filter:sepia(0.2) blur(5px) saturate(0.9);
+    filter:sepia(0.2) blur(5px) saturate(0.9)!important;
 }
 
 

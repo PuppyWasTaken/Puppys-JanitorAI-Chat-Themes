@@ -10,9 +10,9 @@
 
 /* background */ 
 [class*="_chatLayoutBackground_"]{
-    filter:blur(1px);
+    filter:blur(1px)!important;
     background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b4a30557-d52f-4b80-8f92-72942d71184d/ddszwbt-2557113f-52b1-486e-82ad-985ea548541f.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9iNGEzMDU1Ny1kNTJmLTRiODAtOGY5Mi03Mjk0MmQ3MTE4NGQvZGRzendidC0yNTU3MTEzZi01MmIxLTQ4NmUtODJhZC05ODVlYTU0ODU0MWYuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.E39S2CVrckuWnURVU9c-aJbWb20Hcv9TaR_rcDr11do)!important;
-    opacity: 0.65;
+    opacity: 0.65!important;
 }
 
 /* scrollbar */
