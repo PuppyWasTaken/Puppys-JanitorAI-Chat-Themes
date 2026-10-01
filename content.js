@@ -1,5 +1,3 @@
-
-
 (function () {
   function isChatPage() {
     return window.location.origin === "https://janitorai.com" &&
@@ -33,9 +31,37 @@
 
   let applyGeneration = 0;
   let routeActive = true;
+  let themeStyle = null;
+  let overrideStyle = null;
+  let reorderCount = 0;
+  let reorderWindowStart = 0;
+
+  function ensureStyleOrder(fromMutation = false) {
+    const root = document.documentElement;
+    if (!isChatPage() || !root) return;
+    const styles = [themeStyle, overrideStyle].filter(Boolean);
+    if (styles.length === 0) return;
+    let node = root.lastChild;
+    for (let i = styles.length - 1; i >= 0; --i) {
+      if (node !== styles[i]) {
+        if (fromMutation) {
+          const now = performance.now();
+          if (now - reorderWindowStart > 250) {
+            reorderWindowStart = now;
+            reorderCount = 0;
+          }
+          if (++reorderCount > 10) return;
+        }
+        styles.forEach((style) => root.appendChild(style));
+        return;
+      }
+      node = node.previousSibling;
+    }
+  }
 
   function clearPageStyles() {
     ++applyGeneration; 
+    reorderCount = 0;
     removeInjectedThemeStyles();
     removeOverrideStyle();
     appliedThemeId = undefined;
@@ -50,12 +76,16 @@
   }
 
   function removeInjectedThemeStyles() {
+    if (themeStyle) themeStyle.remove();
+    themeStyle = null;
     document
       .querySelectorAll(`style[${THEME_STYLE_ATTR}]`)
       .forEach((el) => el.remove());
   }
 
   function removeOverrideStyle() {
+    if (overrideStyle) overrideStyle.remove();
+    overrideStyle = null;
     const existing = document.getElementById(OVERRIDE_STYLE_ID);
     if (existing) existing.remove();
   }
@@ -70,7 +100,8 @@
       const style = document.createElement("style");
       style.setAttribute(THEME_STYLE_ATTR, theme.id);
       style.textContent = css;
-      document.head.appendChild(style);
+      themeStyle = style;
+      document.documentElement.appendChild(style);
     } catch (err) {
       console.error(`[JAI Theme Overlay] Failed to load theme "${theme.id}":`, err);
     }
@@ -128,7 +159,8 @@
     const style = document.createElement("style");
     style.id = OVERRIDE_STYLE_ID;
     style.textContent = rules.join("\n");
-    document.head.appendChild(style);
+    overrideStyle = style;
+    document.documentElement.appendChild(style);
   }
 
   async function applyState() {
@@ -162,15 +194,16 @@
     }
 
     injectOverrides(activeThemeId, bgImageUrl, textColors, textBgColors);
+    ensureStyleOrder();
   }
 
 
   function start() {
-    if (document.head) {
+    if (document.documentElement) {
       applyState();
     } else {
       new MutationObserver((_, obs) => {
-        if (document.head) {
+        if (document.documentElement) {
           obs.disconnect();
           applyState();
         }
@@ -180,7 +213,10 @@
   start();
 
 
-  new MutationObserver(syncRoute).observe(document, { childList: true, subtree: true });
+  new MutationObserver(() => {
+    syncRoute();
+    ensureStyleOrder(true);
+  }).observe(document, { childList: true, subtree: true });
   window.addEventListener("popstate", syncRoute);
   window.addEventListener("pageshow", syncRoute);
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

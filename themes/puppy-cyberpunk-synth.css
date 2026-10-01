@@ -112,7 +112,7 @@ button[aria-label="Scroll to bottom"]:is(:hover,:focus,:active)::after,button[ar
 }
 
 /* chat message styling */
-[class*="_messageBody_"] p{
+[class*="messageBody_"] p{
     font-family: "Share Tech", sans-serif!important;
     color: #fb789a;
     font-size: 1rem;
