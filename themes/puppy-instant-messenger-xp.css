@@ -330,11 +330,17 @@ hr{
     padding:0.1rem;
 }
 
-[class*="thinkTagContainer_"]{display:none;}
+[class*="thinkTagContainer_"] {
+    position: absolute;
+    top: 5rem;
+    left: -5.2rem;
+    width: auto;
+}
+[class*="thinkBody_"]{color:black!important;}
 
-[class*="messageBody_"]>div:nth-child(2),[class*="messageBody_"]:has([class*="thinkTagContainer_"])>div:nth-child(3){
-    padding-left:0.5rem;
-    padding-top:0.5rem;
+[class*="messageBody_"]>div:nth-child(2):not([class*="messageNameContainerEditing_"]), [class*="messageBody_"]:has([class*="thinkTagContainer_"], [class*="forkedFromBanner_"])>div:nth-child(3) {
+    padding-left: 0.5rem;
+    padding-top: 0.5rem;
     background: white;
     border: 2px inset black;
 }
@@ -382,7 +388,15 @@ button[class*="controlPanelButton_"], button[class*="footerActionButton_"], butt
 button[class*="scrollToBottomButton_"]{filter:none;top:10%;}
 [class*="botMessageControlWrapper_"]{bottom:0;}
 [class*="botChoicesSlider_"] [class*="messageControls_"]{right:5rem;bottom:-0.5rem;}
-[class*="messageCounter_"]{bottom:1.75rem;font-family:'Arimo';color:black!important;font-size:10px!important;line-height:1;}
+[class*="messageCounter_"] {
+    bottom: 3rem;
+    left: 1%;
+    transform: unset;
+    font-family: 'Arimo';
+    color: black !important;
+    font-size: 10px !important;
+    line-height: 1;
+}
 
 /* character messages */
 :is(div[data-index$="0"], div[data-index$="2"], div[data-index$="4"], div[data-index$="6"], div[data-index$="8"]){

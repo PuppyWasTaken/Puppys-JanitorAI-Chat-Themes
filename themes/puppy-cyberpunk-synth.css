@@ -141,6 +141,7 @@ button[aria-label="Scroll to bottom"]:is(:hover,:focus,:active)::after,button[ar
     text-decoration: underline solid 1px;
     border-top: 1px solid #00dee2;
 }
+[class*="thinkBody_"]{color: #8ac6e0 !important;}
 svg{
     color: #05e2ff!important;
 }

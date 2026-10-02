@@ -783,7 +783,7 @@ background: linear-gradient(180deg, #26221f 0%, #1a1715 100%);
 img[alt="User Avatar Border"]{display:none;}
 
 img[alt="Character Icon"]{filter:sepia(1);}
-
+[class*="thinkBody_"]{color:#e5a93b!important;}
 [class*="messageBody_"] p {
     font-family: "Genos", sans-serif;
     color: #c59f71;

@@ -303,7 +303,7 @@ hr {
 img[alt="User Avatar Border"]{display:none;}
 
 img[alt="Character Icon"],[class*="nameText_"]+*{filter:sepia(1);}
-
+[class*="thinkBody_"]{color:black!important;}
 [class*="messageBody_"] p {
     font-family: "Josefin Slab", serif;
     color: #372f24;
