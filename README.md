@@ -18,7 +18,7 @@ CSS injection browser extension to make your JanitorAI chats look nicer. Applies
 ## Installation
 
 ### Web Store Installation
-1. Install the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/pajlpkacdcamnfkcgoeffmphbcpfbgki?utm_source=item-share-cb).
+1. Install the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/pajlpkacdcamnfkcgoeffmphbcpfbgki?utm_source=item-share-cb) or [Firefox Add-on Store](https://addons.mozilla.org/en-US/firefox/addon/janitorai-chat-theme-overlay/?).
 2. Pin the extension to your 'Quick Access'
 
 ### Manual Installation (Chrome)
