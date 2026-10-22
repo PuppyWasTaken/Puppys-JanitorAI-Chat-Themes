@@ -52,6 +52,12 @@ Analog Horror/Found Footage Theme
 
 Cottagecore Theme
 ![Cottage Core](https://file.garden/aWyedZylm2AE_XoC/Extension%20Theme%20Demos/CottageCore.png)
+Text Messages Light
+![Text Message Light](https://file.garden/aWyedZylm2AE_XoC/Extension%20Theme%20Demos/TxtMsgLight.png)
+Text Messages Dark
+![Text Message Dark](https://file.garden/aWyedZylm2AE_XoC/Extension%20Theme%20Demos/TxtMsgDark.png)
+Discord Server Dark
+![Discord Dark](https://file.garden/aWyedZylm2AE_XoC/Extension%20Theme%20Demos/DiscordDark.png)
 
 ## License
 
