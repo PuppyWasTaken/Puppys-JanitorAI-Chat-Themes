@@ -2,6 +2,7 @@ const DEFAULT_OVERRIDES = {
   background: {
     selector: '[class*="_chatLayoutBackground_"]',
     property: "background-image",
+    format: (value) => `url(${JSON.stringify(value)})`
   },
   text: {
     // Each key here is a TEXT_SLOTS id (see below) — one selector, one
@@ -66,6 +67,21 @@ const THEMES = [
     name: "Instant Messenger / XP",
     file: "themes/puppy-instant-messenger-xp.css"
     // overrides omitted -> uses DEFAULT_OVERRIDES
+  },
+  {
+    id: "puppy-text-messages-light",
+    name: "Text Messenger / Light",
+    file: "themes/puppy-text-messages-light.css"
+  },
+  {
+    id: "puppy-text-messages-dark",
+    name: "Text Messenger / Dark",
+    file: "themes/puppy-text-messages-dark.css"
+  },
+  {
+    id: "puppy-discord-dark",
+    name: "Discord Dark",
+    file: "themes/puppy-discord-dark.css"
   }
 ];
 
@@ -89,13 +105,15 @@ function getEffectiveOverridesForTheme(storageData, themeId) {
       // { [slotKey]: "#rrggbb" | "transparent" } — background behind that
       // kind of text. A missing key means "leave the theme's own
       // background alone".
-      textBgColors: perTheme.textBgColors || {}
+      textBgColors: perTheme.textBgColors || {},
+      textDecorationColors: perTheme.textDecorationColors || {}
     };
   }
   return {
     bgImageUrl: storageData[STORAGE_KEYS.legacyBgImageUrl] || null,
     textColors: storageData[STORAGE_KEYS.legacyTextColors] || {},
-    textBgColors: {}
+    textBgColors: {},
+    textDecorationColors: {}
   };
 }
 
@@ -105,4 +123,104 @@ function getPopupThemes(preferredIds) {
     if (picked.length > 0) return picked.slice(0, MAX_POPUP_THEMES);
   }
   return THEMES.slice(-MAX_POPUP_THEMES);
+}
+
+const MESSAGE_SCOPES = {
+  char: ':is(div[data-index$="0"], div[data-index$="2"], div[data-index$="4"], div[data-index$="6"], div[data-index$="8"])',
+  user: ':is(div[data-index$="1"], div[data-index$="3"], div[data-index$="5"], div[data-index$="7"], div[data-index$="9"])'
+};
+const themeTextConfigs = new Map();
+
+function colorToHex(value, fallback) {
+  if (!value || value === "currentcolor" || value === "inherit") return fallback;
+  const context = document.createElement("canvas").getContext("2d");
+  context.fillStyle = fallback;
+  context.fillStyle = value;
+  return /^#[\da-f]{6}$/i.test(context.fillStyle) ? context.fillStyle : fallback;
+}
+
+// Parse with the browser's CSS parser, including nested rules. This stylesheet
+// is never attached to the page; imports and external assets are not loaded.
+function parseThemeTextConfig(css) {
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(css.replace(/@import\s+[^;]+;/gi, ""));
+  const declarations = { all: {}, char: {}, user: {} };
+  let separateMessages = false;
+  function visit(rules, parentSelector = "") {
+    for (const rule of rules) {
+      const selector = rule.selectorText
+        ? `${parentSelector} ${rule.selectorText}`.trim() : parentSelector;
+      const scope = /data-index\$=["']1["']/.test(selector) ? "user"
+        : /data-index\$=["']0["']/.test(selector) ? "char" : "all";
+      if (rule.style && !selector.includes("::")) {
+        for (const { key } of TEXT_SLOTS) {
+          const slotSelector = DEFAULT_OVERRIDES.text[key].selector;
+          if (!selector.endsWith(slotSelector)) continue;
+          const values = declarations[scope][key] ||= {};
+          for (const property of ["color", "text-decoration-line", "text-decoration-style", "text-decoration-thickness", "text-decoration-color"]) {
+            const value = rule.style.getPropertyValue(property);
+            if (value) values[property] = value;
+          }
+          if (scope !== "all" && rule.style.color) separateMessages = true;
+        }
+      }
+      if (rule.cssRules) visit(rule.cssRules, selector);
+    }
+  }
+  visit(sheet.cssRules);
+  const scopes = separateMessages ? ["char", "user"] : ["all"];
+  const slots = scopes.flatMap((scope) => TEXT_SLOTS.map((slot) => {
+    const values = { ...declarations.all[slot.key], ...declarations[scope][slot.key] };
+    const normal = { ...declarations.all.normal, ...declarations[scope].normal };
+    const defaultColor = colorToHex(values.color || normal.color, slot.defaultColor);
+    const line = values["text-decoration-line"];
+    return {
+      ...slot,
+      key: scope === "all" ? slot.key : `${scope}.${slot.key}`,
+      baseKey: slot.key,
+      label: scope === "all" ? slot.label : `${scope === "char" ? "Character" : "User"} — ${slot.label}`,
+      selector: `${scope === "all" ? "" : MESSAGE_SCOPES[scope] + " "}${DEFAULT_OVERRIDES.text[slot.key].selector}`,
+      defaultColor,
+      defaultDecorationColor: colorToHex(values["text-decoration-color"], defaultColor),
+      decorationLine: line && line !== "initial" ? line : "underline",
+      decorationStyle: values["text-decoration-style"] || "solid",
+      decorationThickness: values["text-decoration-thickness"] && values["text-decoration-thickness"] !== "auto"
+        ? values["text-decoration-thickness"] : "1px"
+    };
+  }));
+  return { separateMessages, slots };
+}
+
+async function loadThemeTextConfig(themeId) {
+  if (!themeTextConfigs.has(themeId)) {
+    themeTextConfigs.set(themeId, (async () => {
+      const theme = THEMES.find((item) => item.id === themeId);
+      if (!theme) return parseThemeTextConfig("");
+      try {
+        const response = await fetch(chrome.runtime.getURL(theme.file));
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return parseThemeTextConfig(await response.text());
+      } catch (error) {
+        console.error("Could not read theme text defaults:", error);
+        return parseThemeTextConfig("");
+      }
+    })());
+  }
+  return themeTextConfigs.get(themeId);
+}
+
+function buildTextOverrideRules(config, textColors, textDecorationColors) {
+  const rules = [];
+  // Keep existing all-message colour overrides working; scoped values win.
+  for (const slot of config.slots) {
+    const color = textColors[slot.key] || textColors[slot.baseKey];
+    const decoration = textDecorationColors[slot.key] || textDecorationColors[slot.baseKey];
+    if (/^#(?:[\da-f]{3}|[\da-f]{6})$/i.test(color || "")) {
+      rules.push(`${slot.selector} { color: ${color} !important; }`);
+    }
+    if (/^#(?:[\da-f]{3}|[\da-f]{6})$/i.test(decoration || "")) {
+      rules.push(`${slot.selector} { text-decoration-line: ${slot.decorationLine} !important; text-decoration-style: ${slot.decorationStyle} !important; text-decoration-thickness: ${slot.decorationThickness} !important; text-decoration-color: ${decoration} !important; }`);
+    }
+  }
+  return rules;
 }

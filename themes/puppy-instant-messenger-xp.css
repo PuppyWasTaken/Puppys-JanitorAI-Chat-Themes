@@ -8,6 +8,10 @@
 @import url("https://unpkg.com/xp.css");
 
 
+*, body{
+    cursor: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppyxpcursor.png"), auto;
+}
+
 /* background */ 
 [class*="_chatLayoutBackground_"]{
     filter:blur(1px)!important;
@@ -458,3 +462,9 @@ button[class*="scrollToBottomButton_"]{filter:none;top:10%;}
 [aria-label="Close modal"] button{color:black;}
 [aria-label="Close modal"] *{color:black;}
 
+[class*="soundcloudPlayer_"]{
+	position: absolute;
+    top: 2rem;
+	background: white;
+}
+[class*="soundcloudResponsive_"]{filter: none !important;}

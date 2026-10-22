@@ -1,0 +1,367 @@
+/* ========= Discord Chat Dark Theme by Permanent/Puppy ======= */ 
+/* For personal use only!!! Not for commercial use or sale. Do not redistribute without permission. */ 
+/* image assets AI generated or under CC license */
+/* last update: 10/06/2026 */
+
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
+
+
+*, body{
+    cursor: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppydarkminimalcursor.png"), auto;
+}
+
+
+/* background */ 
+[class*="_chatLayoutBackground_"]{
+    background-image: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppydiscorddark.png")!important;
+    opacity: 1!important;
+}
+
+/* header + page stuff */
+[class*="headerContainer_"]{
+    background: linear-gradient(
+    to bottom,
+    #121214 0% 50%,      /* Top section color */
+    #222225 50% 50.5%,   /* Top subtle border line */
+    #1a1a1e 50.5% 100%   /* Main body section color */
+  );
+    border-bottom: 1px solid #222225;
+    backdrop-filter:none;
+    box-shadow:none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top:0.2rem;
+    padding-bottom:2rem;
+}
+[class*="headerGrid_"]{display:contents;}
+div:has(>[class*="desktopBackBtn_"]){order:1;}
+[class*="customDivider_"]{width:auto;order:2;flex: 1;min-width: unset;overflow:unset;}
+[class*="menuWrapper_"]{order:3;margin-right:1rem;gap:0.7rem;}
+[class*="headerContainer_"]::before{
+    content: "# general";
+    font: normal normal normal 1rem / 1 Hanken Grotesk;
+    color:#fbfbfb;
+    position:absolute;  
+    top:2.75rem;
+    left:1vw;
+    transition: transform 250ms ease-out;
+}
+
+[class*="headerContainer_"]::after{
+    content: "\f0f3  \f08d  \f0c0";
+    font: normal normal normal 1.2rem / 1 FontAwesome;
+    color:#96979e;
+    position:absolute;  
+    top:2.5rem;
+    right:1vw;
+    letter-spacing:0.5rem;
+}
+
+[class*="customDividerText_"]{
+    font-family:'Hanken Grotesk',sans-serif;
+    color:#FBFBFB;
+    font-weight:400;
+}
+[class*="customDividerText_"]::after{
+    content:"'s server";
+}
+[class*="desktopBackBtn_"] svg{color:#81828a!important;}
+[class*="desktopBackLabel_"]{font-size:0;}
+[class*="menuButton_"] svg{display:none;}
+[class*="menuButton_"]::after{
+    content:'\f059';
+    font-family:'Fontawesome';
+    font-size:1.2rem;
+    color:#96979e;
+}
+[class*="apiTag_"]{background:transparent!important;border:none!important;font-size:0;padding: 0;}
+[class*="apiTag_"]::after{
+    content:'\f01c';
+    color:#96979e;
+    font-family:'Fontawesome';
+    font-size:1.2rem;
+    font-weight:600;
+}
+
+[class*="desktopBackBtn_"], [class*="apiTag_"], [class*="menuButton_"]{transition: opacity 350ms ease-in-out;opacity:1;}
+:is([class*="desktopBackBtn_"],[class*="apiTag_"], [class*="menuButton_"]):is(:hover,:focus,:active){opacity:0.3;}
+
+
+/* chat input bar thing */
+[class*="chatInputWrapper_"]{padding:1rem 0;}
+[class*="chatInputInner_"]{
+    flex-direction:row;  
+    box-shadow:none;
+    border:1px solid color-mix(in oklab,hsl(240 calc(1*4%) 60.784% /0.0392156862745098) 100%,hsl(0 0% 0% /0.0392156862745098) 0%);
+    background:#222327;
+    border-radius:8px;
+    align-items: center;
+    padding:0.2rem 0.5rem;
+}
+[class*="controlsRow_"]{display:contents;}
+[class*="controlsLeft_"]{order:3;flex-direction:row-reverse;margin-left:0.5rem;}
+[class*="sendButton_"],[class*="stopButton_"]{order:2;}
+[class*="chatTextarea_"]{order:1;}
+
+[class*="sparkleButton_"] svg{display:none;}
+[class*="sparkleButton_"]::after{
+    content:'\f61f';
+    font-family:'Fontawesome';
+    color:#abacb2;
+    opacity:1;
+    transition:opacity 350ms ease-in-out;
+}
+[class*="sparkleButton_"]:is(:hover,:focus,:active){opacity:0.3;}
+[class*="switcher_"]{background:transparent!important;border:none!important;}
+[class*="switcher_"] :is(img,svg,span){display:none;}
+[class*="switcher_"]::after{
+    content:'\f118';
+    color:#abacb2;
+    font-family:'Fontawesome';
+    width: 1.4rem;
+    transition:opacity 350ms ease-in-out;
+}
+[class*="switcher_"]:is(:hover,:focus,:active)::after{opacity:0.3;}
+
+[class*="chatTextarea_"]::placeholder{color:#6c6d76!important;font-family:'Hanken Grotesk'!important;}
+[class*="chatTextarea_"]{color:#efeff1!important;font-family:'Hanken Grotesk'!important;}
+[class*="chatTextarea_"]{
+    margin: 0 0.5rem;
+}
+[class*="chatInputInner_"]::before{
+    content:'\2b';
+    font-family:'Fontawesome';
+    color:#898a8f;
+    font-size:1.2rem;
+    font-weight:100;
+    left:.5rem;
+    position:relative;
+}
+
+[class*="sendButton_"], [class*="sendButton_"]:is(:hover,:focus,:active),[class*="sendButton_"]:hover:not(:disabled){
+    border-radius:8px;
+    background:#5865f2;
+    border:none;
+}
+[class*="sendButton_"] svg{display:none;}
+[class*="sendButton_"]:disabled{
+    background:#3d3d40;
+    border:none;
+    border-radius:8px;
+}
+[class*="sendButton_"]::after{
+    content:'\f1d8';
+    font-family:'Fontawesome';
+    color:#fff;
+    
+}
+
+/* universal chat styling */
+[class*="disclaimer_"]{
+    background: transparent;
+    border:none;
+    border-bottom: 1px solid color-mix(in oklab,hsl(240 calc(1*4%) 60.784% /0.12156862745098039) 100%,hsl(0 0% 0% /0.12156862745098039) 0%);
+    border-radius: 0px;
+    font-family: 'Hanken Grotesk';
+    color: #fbfbfb;
+    font-weight: 400;
+    display:flex;
+    flex-direction:column;
+    margin-left: 0.9rem;
+    align-items:flex-start;
+    margin-top:0.5rem;
+}
+[class*="disclaimer_"]::before{
+    content:'#';
+    line-height:1;
+    font-size:3rem;
+    padding:0.5rem 1rem;
+    background:#242428;
+    border-radius:50%;
+    margin-left:-0.5rem;
+}
+hr{
+    background:color-mix(in oklab,hsl(240 calc(1*4%) 60.784% /0.12156862745098039) 100%,hsl(0 0% 0% /0.12156862745098039) 0%);
+    margin: 2px 0;
+}
+
+[class*="thinkTitle_"]{
+    color:#96979e;
+    font-family:'Hanken Grotesk';
+}
+
+[class*="thinkBody_"]{
+    background: #222327;
+    border-radius: 8px;
+    font-family:'Source Code Pro',monospace;
+    color:#efefea;
+}
+[class*="messageContent_"]{transition:background 250ms ease-in-out;}
+[class*="messageDisplayWrapper_"]:is(:hover,:focus,:active) [class*="messageContent_"], [class*="messageContent_"]:is(:hover,:focus,:active), [class*="messageContent_"]:has([class*="autoResizeTextarea_"]){
+    background:color-mix(in oklab,hsl(240 calc(1*4%) 60.784%/0.12156862745098039) 100%,hsl(0 0% 0% /0.12156862745098039) 0%);
+}
+[class*="nameContainer_"] svg, [class*="nameContainer_"] img{display:none;}
+[class*="nameContainer_"]:has(svg,img) [class*="nameText_"]::after{
+    content:'\f00c  BOT';
+    font-family:'Fontawesome';
+    font-weight:100;
+    letter-spacing:2px;
+    font-size:10px;
+    margin-left:.7rem;
+    padding:0.25rem;
+    border-radius:5px;
+    background:#5865f2;
+}
+
+[class*="nameText_"]{
+    font-family:'Hanken Grotesk', sans-serif;
+    color:#fdfdfd;
+}
+
+[class*="messageBody_"] p{
+    font-family:'Hanken Grotesk', sans-serif;
+    line-height: 1.5rem;
+    margin: 1px 0;
+    border-radius: 1em;
+    font-weight:300;
+    color:#EFEFF1;
+}
+
+[class*="messageBody_"] code:not(pre > code) {
+    font-family:'Source Code Pro', monospace;
+    color:#EFEFF1;
+    margin: -.2em 0;
+    padding: 0 .2em;
+    background:color-mix(in oklab,hsl(234.935 calc(1*85.556%) 64.706% /0.0784313725490196) 100%,hsl(0 0% 0% /0.0784313725490196) 0%);
+    border: 1px solid color-mix(in oklab,hsl(240 calc(1*4%) 60.784% /0.2) 100%,hsl(0 0% 0% /0.2) 0%);
+    line-height: 1.125rem;
+    border-radius: 4px;
+    font-size:13.6px;
+}
+[class*="messageBody_"] em {
+    font-family:'Hanken Grotesk', sans-serif;
+    color:#EFEFF1;
+}
+[class*="messageBody_"] strong {
+    font-weight:700;
+    letter-spacing:0.3px;
+    color:#EFEFF1;
+}
+[class*="messageBody_"] span {
+    color:#EFEFF1!important;
+}
+[class*="messageAvatarContainer_"]{
+    display: flex;
+    align-items: flex-start;
+    padding-top: 0.3rem;
+    padding-left: 0.3rem;
+}
+img[class*="messageAvatarImage_"]{
+    border-radius:50%!important;
+    object-position:top;
+}
+:is(button[class*="controlPanelButton_"], button[class*="footerActionButton_"]) svg{
+    color:#ABACB2!important;
+}
+[class*="messageControls_"]{
+    right: 0.6rem;
+    box-shadow:0 1px 4px 0 hsl(none 0% 0%/0.14);
+    border-radius: 8px;
+    border:1px solid color-mix(in oklab,hsl(240 calc(1*4%) 60.784% /0.0392156862745098) 100%,hsl(0 0% 0% /0.0392156862745098) 0%);
+    background:color-mix(in oklab, hsl(240 calc(1*6.494%) 15.098% /1) 100%, #000 0%);
+    transition:opacity 250ms ease-out;
+    opacity:0;
+}
+[class*="messageDisplayWrapper_"]:is(:hover,:focus,:active) [class*="messageControls_"], [class*="messageDisplayWrapper_"]:has([class*="autoResizeTextarea_"]) [class*="messageControls_"]{
+    opacity:1;
+}
+button[class*="editPanelButton_"]{border-radius:8px;}
+button[class*="scrollToBottomButton_"]{
+    border-radius:8px;
+    background:#5865f2;
+    border:none;
+}
+button[class*="scrollToBottomButton_"] svg{
+    color:#abacb2;
+}
+
+[class*="botMessageControlWrapper_"] svg{
+    color:#abacb2!important;
+}
+[class*="messageCounter_"]{
+    color:#abacb2!important;
+    font-family:'Hanken Grotesk';
+    font-weight:400;
+}
+
+/* menu and pop ups */
+[class*="autoResizeTextarea_"]{
+    font-family:'Hanken Grotesk'!important;
+    background:color-mix(rgb(34, 35, 39) 100%, rgb(0, 0, 0) 0%);
+    border-radius:8px;
+    color:#efeff1!important;
+}
+
+[class*="enlargedAvatarOverlay_"] {
+    background:#222327;
+    border:1px solid #222225;
+}
+[class*="enlargedAvatarOverlay_"] svg{color:#abacb2!important;}
+[class*="menuList_"]:is([class*="compact_"]), [aria-label="Close modal"]>div{
+    background:color-mix(in oklab, hsl(240 calc(1*5.882%) 16.667% /1) 100%, #000 0%);
+    border:1px solid color-mix(in oklab,hsl(240 calc(1*4%) 60.784% /0.12156862745098039) 100%,hsl(0 0% 0% /0.12156862745098039) 0%);
+    border-radius:8px;
+    box-shadow:0 12px 24px 0 hsl(none 0% 0%/0.24);
+}
+[class*="menuList_"]{
+    border:1px solid color-mix(in oklab,hsl(240 calc(1*4%) 60.784% /0.12156862745098039) 100%,hsl(0 0% 0% /0.12156862745098039) 0%);
+    border-radius: 0;
+    background:color-mix(rgb(18, 18, 20) 100%, rgb(0, 0, 0) 0%);
+}
+[class*="menuList_"]:not(:is([class*="compact_"]))::before{
+    content:'Channels ⏷';
+    color:#76777e;
+    font-family:'Hanken Grotesk';
+    font-size:12px;
+    padding-left:1rem;
+}
+[class*="menuList_"]:is([class*="open_"]):not(:is([class*="compact_"])){
+    animation: slidein 400ms ease forwards;
+    top: 2.2rem !important;
+    left: 0 !important;
+    bottom: 0;
+}
+@keyframes slidein{
+    0%{transform:translateX(-50%);}
+    100%{transform:translateX(0);}
+}
+body:has([class*="menuList_"]:not(:is([class*="compact_"])):is([class*="open_"])) [class*="headerContainer_"]::before{
+    transform:translateX(230px);
+}
+
+
+[class*="menuList_"] button{
+    font-family:'Hanken Grotesk';
+    color:color-mix(in oklab, hsl(233.333 calc(1*3.704%) 52.353% /1) 100%, #000 0%)!important;
+    font-weight:400;
+    transition: all 400ms ease-in-out;
+    background:transparent;
+    border-radius:8px;
+}
+[class*="menuItemIcon_"]{
+    color:#81828a!important;
+    transition: all 400ms ease-in-out;
+}
+[class*="menuList_"] button:is(:hover,:focus){
+    color:color-mix(in oklab, hsl(0 calc(1*0%) 98.431% /1) 100%, #000 0%)!important;
+    background:color-mix(in oklab,hsl(240 calc(1*4%) 60.784% /0.2) 100%,hsl(0 0% 0% /0.2) 0%);
+}
+[class*="menuList_"] button:is(:hover,:focus) [class*="menuItemIcon_"]{
+    color:#fbfbfb!important;
+}
+[aria-label="Close modal"] button{background:#2c2c30;color:#f1f1f1;border:1px solid #222225;}
+[aria-label="Close modal"] button:is(:hover,:focus,:active){background:#29292d;color:#81828a!important;}
+[aria-label="Close modal"] *{font-family:'Hanken Grotesk';color:#fdfdfd;}
+[class*="soundcloudPlayer_"]{display:none;}
+button:is([class*="menuButton_"],[class*="controlPanelButton_"],[aria-label="More actions"],[aria-label="Continue this message"],[class*="botChoiceButton_"],[aria-label="Edit"],[class*="footerActionButton_"]){background:transparent!important;}

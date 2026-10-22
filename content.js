@@ -116,12 +116,13 @@
     };
   }
 
-  function injectOverrides(activeThemeId, bgImageUrl, textColors, textBgColors) {
+  function injectOverrides(activeThemeId, bgImageUrl, textColors, textBgColors, textDecorationColors, textConfig) {
     removeOverrideStyle();
     if (!isChatPage()) return;
     const hasTextColor = textColors && Object.keys(textColors).length > 0;
     const hasTextBg = textBgColors && Object.keys(textBgColors).length > 0;
-    if (!bgImageUrl && !hasTextColor && !hasTextBg) return;
+    const hasDecoration = Object.keys(textDecorationColors).length > 0;
+    if (!bgImageUrl && !hasTextColor && !hasTextBg && !hasDecoration) return;
 
     const theme = activeThemeId ? themeById(activeThemeId) : null;
     if (!theme) return;
@@ -134,15 +135,7 @@
       rules.push(`${selector} { ${property}: ${format(bgImageUrl)} !important; }`);
     }
 
-    if (hasTextColor && overrides.text) {
-      TEXT_SLOTS.forEach(({ key }) => {
-        const color = textColors[key];
-        const slot = overrides.text[key];
-        if (!color || !slot) return;
-        const { selector, property, format } = slot;
-        rules.push(`${selector} { ${property}: ${format(color)} !important; }`);
-      });
-    }
+    rules.push(...buildTextOverrideRules(textConfig, textColors, textDecorationColors));
 
 
     if (hasTextBg && overrides.text) {
@@ -175,9 +168,12 @@
     if (!isChatPage() || generation !== applyGeneration) return;
     const activeThemeId = data[STORAGE_KEYS.activeTheme] || null;
 
-    const { bgImageUrl, textColors, textBgColors } = activeThemeId
+    const { bgImageUrl, textColors, textBgColors, textDecorationColors = {} } = activeThemeId
       ? getEffectiveOverridesForTheme(data, activeThemeId)
       : { bgImageUrl: null, textColors: {}, textBgColors: {} };
+
+    const textConfig = await loadThemeTextConfig(activeThemeId);
+    if (!isChatPage() || generation !== applyGeneration) return;
 
 
     if (activeThemeId !== appliedThemeId) {
@@ -193,7 +189,7 @@
       appliedThemeId = activeThemeId;
     }
 
-    injectOverrides(activeThemeId, bgImageUrl, textColors, textBgColors);
+    injectOverrides(activeThemeId, bgImageUrl, textColors, textBgColors, textDecorationColors, textConfig);
     ensureStyleOrder();
   }
 

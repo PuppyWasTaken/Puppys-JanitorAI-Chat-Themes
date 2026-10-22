@@ -27,9 +27,6 @@ body.manage-page .text-color-list {
 body.manage-page .radio-label {
   font-size: 14px;
 }
-
-/* Text backgrounds: label + status + picker + None/Reset. Wraps so the
-   two buttons drop under the label on narrow windows. */
 body.manage-page .bg-row {
   flex-wrap: wrap;
 }

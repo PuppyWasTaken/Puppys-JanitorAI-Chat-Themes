@@ -5,6 +5,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&family=Rubik+Iso&family=Rubik+Pixels&display=swap');
 
+*, body{
+    cursor: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppyanalogcursor.png"), auto;
+}
+
 /* scanlines and overlay you can delete to remove */
 [class*="_messagesWrapper_"]::after {
     content: "";
@@ -228,6 +232,15 @@ button[class*="desktopBackBtn_"] svg{
 }
 [class*="soundcloudResponsive_"]{filter: sepia(1) grayscale(1) invert(1) !important;}
 
+/* popups */
+[class*="enlargedAvatarOverlay_"]{
+	border-radius:0;
+	background: linear-gradient(180deg, #26221f 0%, #1a1715 100%);
+	border: 1px solid #4d463f;
+}
+[class*="enlargedAvatarOverlay_"] svg{
+	color:#e5a93b!important;
+}
 
 /* scrollbar */
 ::-webkit-scrollbar-track {

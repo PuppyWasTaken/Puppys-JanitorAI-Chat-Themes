@@ -5,6 +5,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&family=Josefin+Slab:ital,wght@0,100..700;1,100..700&display=swap');
 
+*, body{
+    cursor: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppycottagecursor.png"), auto;
+}
+
 /* header */
 [class*="headerContainer_"] {
     background: transparent;
@@ -429,6 +433,36 @@ img[alt="Character Icon"],[class*="nameText_"]+*{filter:sepia(1);}
         left:-2rem;
         pointer-events:none;
     }
+}
+
+[class*="enlargedAvatarOverlay_"]{
+	border-radius:15px;
+	background: #a2b44863;
+    border: 1px solid #556f30;
+}
+[class*="enlargedAvatarOverlay_"] img{
+	border-radius:15px;
+}
+[class*="enlargedAvatarOverlay_"] button{
+	right:0.5rem;
+}
+[class*="enlargedAvatarOverlay_"] svg{
+	color:#fff!important;
+	stroke:2;
+}
+[class*="menuList_"], [class*="menuList_"]:is([class*="compact_"]){
+	border-radius:15px;
+	background: #a2b44863;
+    border: 1px solid #556f30;
+	backdrop-filter:blur(3px);
+}
+[class*="menuList_"] button{
+	font-family:"Josefin Slab", serif;
+	color:#372f24;
+	font-weight:800;
+	letter-spacing:1px;
+	background:transparent!important;
+	transition: all 400ms ease-in-out;
 }
 
 /* on hover/tap */

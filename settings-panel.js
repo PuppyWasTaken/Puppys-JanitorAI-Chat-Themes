@@ -45,9 +45,11 @@ let overrideWriteQueue = Promise.resolve();
 function updatePerThemeOverrides(themeId, update) {
   if (!themeId) return Promise.resolve();
   const write = overrideWriteQueue.then(async () => {
-    const data = await chrome.storage.local.get([STORAGE_KEYS.perThemeOverrides]);
+    const data = await chrome.storage.local.get([
+      STORAGE_KEYS.perThemeOverrides, STORAGE_KEYS.legacyBgImageUrl, STORAGE_KEYS.legacyTextColors
+    ]);
     const all = { ...(data[STORAGE_KEYS.perThemeOverrides] || {}) };
-    const entry = { ...(all[themeId] || {}) };
+    const entry = { ...(all[themeId] || getEffectiveOverridesForTheme(data, themeId)) };
     update(entry);
     all[themeId] = entry;
     await chrome.storage.local.set({ [STORAGE_KEYS.perThemeOverrides]: all });
@@ -74,16 +76,30 @@ async function onBgUrlChange(themeId, value) {
 
 function onTextColorChange(themeId, key, value) {
   return updatePerThemeOverrides(themeId, (entry) => {
+    splitSharedColor(entry, key);
     entry.textColors = { ...(entry.textColors || {}), [key]: value };
   });
 }
 
 function onTextColorReset(themeId, key) {
   return updatePerThemeOverrides(themeId, (entry) => {
+    splitSharedColor(entry, key);
     const textColors = { ...(entry.textColors || {}) };
     delete textColors[key];
     entry.textColors = textColors;
   });
+}
+
+function splitSharedColor(entry, key) {
+  if (!key.includes(".")) return;
+  const baseKey = key.split(".")[1];
+  if (!entry.textColors || !entry.textColors[baseKey]) return;
+  const colors = { ...entry.textColors };
+  for (const scope of ["char", "user"]) {
+    if (!colors[`${scope}.${baseKey}`]) colors[`${scope}.${baseKey}`] = colors[baseKey];
+  }
+  delete colors[baseKey];
+  entry.textColors = colors;
 }
 
 function onTextBgChange(themeId, key, value) {
@@ -113,13 +129,13 @@ function normalizeHex(raw) {
 }
 
 
-function renderTextColorList(textColorListEl, themeId, textColors) {
+function renderTextColorList(textColorListEl, themeId, textColors, slots) {
 
   const renderedTheme = themeId || "";
   if (textColorListEl.dataset.renderedTheme === renderedTheme) {
-    TEXT_SLOTS.forEach(({ key, defaultColor }) => {
+    slots.forEach(({ key, baseKey, defaultColor }) => {
       const input = document.getElementById(`text-color-${key}`);
-      const value = textColors[key] || defaultColor;
+      const value = colorToHex(textColors[key] || textColors[baseKey], defaultColor);
       // Never reset a focused picker or interrupt a partially typed hex.
       if (document.activeElement === input) return;
       if (input.value !== value) input.value = value;
@@ -134,7 +150,7 @@ function renderTextColorList(textColorListEl, themeId, textColors) {
 
   const mode = textColorListEl.dataset.inputMode === "hex" ? "hex" : "color";
 
-  TEXT_SLOTS.forEach(({ key, label, defaultColor }) => {
+  slots.forEach(({ key, baseKey, label, defaultColor }) => {
     const row = document.createElement("div");
     row.className = "color-row";
 
@@ -142,7 +158,7 @@ function renderTextColorList(textColorListEl, themeId, textColors) {
     labelEl.setAttribute("for", `text-color-${key}`);
     labelEl.textContent = label;
 
-    const startValue = textColors[key] || defaultColor;
+    const startValue = colorToHex(textColors[key] || textColors[baseKey], defaultColor);
     let input, swatch;
 
     if (mode === "hex") {
@@ -192,6 +208,58 @@ function renderTextColorList(textColorListEl, themeId, textColors) {
     row.appendChild(input);
     row.appendChild(resetBtn);
     textColorListEl.appendChild(row);
+  });
+}
+
+function renderTextDecorationList(listEl, themeId, colors, slots) {
+  const renderedTheme = themeId || "";
+  if (listEl.dataset.renderedTheme === renderedTheme) {
+    slots.forEach(({ key, defaultDecorationColor }) => {
+      const input = document.getElementById(`text-decoration-${key}`);
+      if (document.activeElement === input) return;
+      input.value = colorToHex(colors[key], defaultDecorationColor);
+      input.parentElement.querySelector(".bg-status").textContent = colors[key] || "theme default";
+    });
+    return;
+  }
+  listEl.dataset.renderedTheme = renderedTheme;
+  listEl.innerHTML = "";
+  slots.forEach(({ key, label, defaultDecorationColor }) => {
+    const row = document.createElement("div");
+    row.className = "color-row bg-row";
+    const labelEl = document.createElement("label");
+    labelEl.htmlFor = `text-decoration-${key}`;
+    labelEl.textContent = label;
+    const status = document.createElement("span");
+    status.className = "bg-status";
+    status.textContent = colors[key] || "theme default";
+    const input = document.createElement("input");
+    input.type = "color";
+    input.id = labelEl.htmlFor;
+    input.value = colorToHex(colors[key], defaultDecorationColor);
+    input.addEventListener("input", () => {
+      const value = input.value;
+      status.textContent = value;
+      updatePerThemeOverrides(themeId, (entry) => {
+        entry.textDecorationColors = { ...(entry.textDecorationColors || {}), [key]: value };
+      });
+    });
+    const reset = document.createElement("button");
+    reset.type = "button";
+    reset.className = "reset-btn";
+    reset.textContent = "Reset";
+    reset.title = "Restore the theme's original text decoration";
+    reset.addEventListener("click", () => {
+      input.value = defaultDecorationColor;
+      status.textContent = "theme default";
+      updatePerThemeOverrides(themeId, (entry) => {
+        const values = { ...(entry.textDecorationColors || {}) };
+        delete values[key];
+        entry.textDecorationColors = values;
+      });
+    });
+    row.append(labelEl, status, input, reset);
+    listEl.appendChild(row);
   });
 }
 
@@ -342,6 +410,8 @@ async function initSettingsPanel() {
   const resetBgBtn = document.getElementById("reset-bg");
   const textColorListEl = document.getElementById("text-color-list");
   const textBgListEl = document.getElementById("text-bg-list"); // manage.html only
+  const textDecorationListEl = document.getElementById("text-decoration-list");
+  const messageColorHelpEl = document.getElementById("message-color-help");
   const popupThemePickerEl = document.getElementById("popup-theme-picker");
 
   const data = await chrome.storage.local.get([
@@ -364,13 +434,22 @@ async function initSettingsPanel() {
     return checked ? checked.id.replace(/^theme-radio-/, "") : null;
   }
 
-  function paintOverrideFields(themeId, storageData) {
-    const { bgImageUrl, textColors, textBgColors } = themeId
+  let paintGeneration = 0;
+  async function paintOverrideFields(themeId, storageData) {
+    const generation = ++paintGeneration;
+    const config = await loadThemeTextConfig(themeId);
+    if (generation !== paintGeneration || themeId !== currentlyShownThemeId()) return;
+    const { bgImageUrl, textColors, textBgColors, textDecorationColors = {} } = themeId
       ? getEffectiveOverridesForTheme(storageData, themeId)
       : { bgImageUrl: null, textColors: {}, textBgColors: {} };
     if (document.activeElement !== bgUrlInput) bgUrlInput.value = bgImageUrl || "";
-    if (textColorListEl) renderTextColorList(textColorListEl, themeId, textColors);
+    if (textColorListEl) renderTextColorList(textColorListEl, themeId, textColors, config.slots);
     if (textBgListEl) renderTextBgList(textBgListEl, themeId, textBgColors);
+    if (textDecorationListEl) renderTextDecorationList(textDecorationListEl, themeId, textDecorationColors, config.slots);
+    if (messageColorHelpEl) messageColorHelpEl.hidden = !config.separateMessages;
+    document.querySelectorAll("#text-color-list input, #text-color-list button, #text-bg-list input, #text-bg-list button, #text-decoration-list input, #text-decoration-list button, #bg-url, #reset-bg").forEach((control) => {
+      control.disabled = !themeId;
+    });
   }
   paintOverrideFields(activeThemeId, data);
 
@@ -382,7 +461,7 @@ async function initSettingsPanel() {
       STORAGE_KEYS.legacyTextColors
     ]);
 
-    if (themeId === currentlyShownThemeId()) paintOverrideFields(themeId, fresh);
+    if (themeId === currentlyShownThemeId()) await paintOverrideFields(themeId, fresh);
   }
 
   panel = { refreshOverrideFields };

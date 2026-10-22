@@ -1,0 +1,450 @@
+/* ========= Text Messenger Light Theme by Permanent/Puppy ======= */ 
+/* For personal use only!!! Not for commercial use or sale. Do not redistribute without permission. */ 
+/* image assets AI generated or under CC license */
+/* last update: 10/05/2026 */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
+
+*, body{
+    cursor: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppylightminimalcursor.png"), auto;
+}
+
+
+/* background */ 
+[class*="_chatLayoutBackground_"]{
+    filter:blur(3px)!important;
+    background-image: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppywhitebg.png")!important;
+    opacity: 1!important;
+}
+
+/* header + page stuff */
+[class*="headerContainer_"]{
+    background:#F7F7F7;
+    border-bottom: 1px solid #E8E8E8;
+    backdrop-filter:none;
+    box-shadow:none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top:2rem;
+}
+[class*="headerGrid_"]{display:contents;}
+div:has(>[class*="desktopBackBtn_"]){order:1;}
+[class*="customDivider_"]{width:auto;order:2;flex: 1;min-width: unset;overflow:unset;}
+[class*="menuWrapper_"]{order:3;margin-right:0.5rem;gap:0;}
+[class*="headerContainer_"]::before{
+    content: "\f1eb";
+    font: normal normal normal 1.5rem / 1 FontAwesome;
+    color:#000;
+    position:absolute;  
+    top:0;
+    left:1vw;
+    line-height:1.4;
+}
+[class*="headerContainer_"]::after{
+    content: "\f241";
+    font: normal normal normal 2rem / 1 FontAwesome;
+    color:#000;
+    position:absolute;  
+    top:0;
+    right:1vw;
+}
+[class*="customDivider_"]::before{
+    content:'11:11 P.M.';
+    font-family:'Geist',sans-serif;
+    color:#000;
+    font-weight:400;
+    font-size:0.86rem;
+    position:absolute;
+    top:-1.75rem;
+}
+
+[class*="customDividerText_"]{
+    font-family:'Inter',sans-serif;
+    color:#000;
+    font-weight:400;
+}
+[class*="desktopBackBtn_"] svg{color:#1979f6!important;}
+[class*="desktopBackLabel_"]{font-size:0;}
+[class*="desktopBackLabel_"]::after{
+    content:'Messages';
+    color:#1979f6;
+    font-family:'Inter';
+    font-size:0.8rem;
+    font-weight:600;
+}
+[class*="menuButton_"] svg{display:none;}
+[class*="menuButton_"]::after{
+    content:'\f054';
+    font-family:'Fontawesome';
+    font-size:1rem;
+    color:#1979f6;
+}
+[class*="apiTag_"]{background:transparent!important;border:none!important;font-size:0;padding: 0;}
+[class*="apiTag_"]::after{
+    content:'Contact Details';
+    color:#1979f6;
+    font-family:'Inter';
+    font-size:0.8rem;
+    font-weight:600;
+}
+
+[class*="desktopBackBtn_"], [class*="apiTag_"], [class*="menuButton_"]{transition: opacity 350ms ease-in-out;opacity:1;}
+:is([class*="desktopBackBtn_"],[class*="apiTag_"], [class*="menuButton_"]):is(:hover,:focus,:active){opacity:0.3;}
+
+
+/* chat input bar thing */
+[class*="_chatInputContainer_"]{background:#F7F7F7;border-top:1px solid grey;}
+[class*="chatInputWrapper_"]{padding:1rem 0;}
+[class*="chatInputInner_"]{
+    flex-direction:row;  
+    box-shadow:none;
+    border:none;
+    background:none;
+    border-radius:0;
+    align-items: center;
+}
+[class*="controlsRow_"]{display:contents;}
+[class*="controlsLeft_"]{order:1;}
+[class*="sendButton_"],[class*="stopButton_"]{order:3;}
+[class*="chatTextarea_"]{order:2;}
+
+[class*="sparkleButton_"] svg{display:none;}
+[class*="sparkleButton_"]::after{
+    content:'\f130';
+    font-family:'Fontawesome';
+    color:#89909a;
+    opacity:1;
+    transition:opacity 350ms ease-in-out;
+}
+[class*="sparkleButton_"]:is(:hover,:focus,:active){opacity:0.3;}
+[class*="switcher_"]{background:transparent!important;border:none!important;}
+[class*="switcher_"] :is(img,svg,span){display:none;}
+[class*="switcher_"]::after{
+    content:'\f030';
+    color:#89909a;
+    font-family:'Fontawesome';
+    width: 1.4rem;
+    transition:opacity 350ms ease-in-out;
+}
+[class*="switcher_"]:is(:hover,:focus,:active)::after{opacity:0.3;}
+
+[class*="chatTextarea_"]::placeholder,[class*="chatTextarea_"]{color:#000!important;font-family:'Geist'!important;}
+[class*="chatTextarea_"]{
+    background: #fff;
+    margin: 0 0.5rem;
+    border-radius: 30px;
+    border: 1px solid #e1e1e1 !important;
+}
+
+
+[class*="sendButton_"], [class*="sendButton_"]:is(:hover,:focus,:active),[class*="sendButton_"]:hover:not(:disabled){
+    border-radius:50%;
+    background:#1d77c0;
+    border:none;
+}
+[class*="sendButton_"] svg{color:#fff!important;}
+[class*="sendButton_"]:disabled{
+    background:#1d77c080;
+    border:none;
+    border-radius:50%;
+}
+
+/* universal chat styling */
+[class*="disclaimer_"]{
+    background: rgb(250, 250, 250);
+    border: 1px solid rgb(220, 224, 226);
+    border-radius: 15px;
+    font-family: 'Geist';
+    color: #000;
+    font-weight: 200;
+}
+hr{
+    width:70%;
+    background:#8e8e93;
+    margin: 5px 0;
+}
+
+[class*="thinkTagContainer_"] :is([class*="wave_"],[class*="thinkTitle_"],[class*="chevron_"]){
+    display:none;
+}
+
+[class*="thinkTagContainer_"] button{
+    margin-left:0.5rem;
+}
+
+[class*="thinkTagContainer_"] button{
+    width: 3rem; 
+    height: 1.83rem;
+    background: #e5e5e5!important;
+    border-radius: 0.915rem;
+    position:relative;
+}
+[class*="thinkTagContainer_"] button::before{
+    content: '';
+    position: absolute;
+    height: 0.636rem;
+    width: 0.636rem;
+    background: #e5e5e5;
+    border-radius: 50%;
+    left: -0.102rem;
+    bottom: 0.051rem;
+    box-shadow: -0.42rem 0.369rem 0 -0.165rem #e5e5e5;
+}
+[class*="thinkTagContainer_"] button::after{
+    content: '';
+    position: absolute;
+    height: 0.432rem;
+    width: 0.432rem;
+    border-radius: 50%;
+    left: 0.636rem;
+    top: 0.686rem;
+    box-shadow: 
+    0 0 0 0 rgba(150, 150, 150, 0.4),
+    0.636rem 0 0 0 rgba(150, 150, 150, 0.4),
+    1.271rem 0 0 0 rgba(150, 150, 150, 0.4);
+    background: rgba(150, 150, 150, 0.4);
+    animation: typing 1.2s ease-in-out infinite;
+}
+@keyframes typing {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 0 rgba(150, 150, 150, 0.4),
+      0.636rem 0 0 0 rgba(150, 150, 150, 0.4),
+      1.271rem 0 0 0 rgba(150, 150, 150, 0.4);
+    background: rgba(150, 150, 150, 0.4);
+  }
+  25% {
+    box-shadow: 
+      0 0 0 0 rgba(150, 150, 150, 1),
+      0.636rem 0 0 0 rgba(150, 150, 150, 0.4),
+      1.271rem 0 0 0 rgba(150, 150, 150, 0.4);
+    background: rgba(150, 150, 150, 1);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 0 rgba(150, 150, 150, 0.4),
+      0.636rem 0 0 0 rgba(150, 150, 150, 1),
+      1.271rem 0 0 0 rgba(150, 150, 150, 0.4);
+  }
+  75% {
+    box-shadow: 
+      0 0 0 0 rgba(150, 150, 150, 0.4),
+      0.636rem 0 0 0 rgba(150, 150, 150, 0.4),
+      1.271rem 0 0 0 rgba(150, 150, 150, 1);
+  }
+}
+[class*="thinkBody_"]{
+    background: #e5e5e5;
+    border-radius: 0.915rem;
+    font-family:'Ubuntu Mono',monospace;
+    color:black;
+    max-width:70%;
+}
+[class*="nameIcon_"]{display:none;}
+
+[class*="nameText_"]{
+    font-family:'Geist', sans-serif;
+    color:#8e8e93;
+}
+
+[class*="messageBody_"] p{
+    font-family:'Geist', sans-serif;
+    line-height: 1.4em;
+    margin: 1px 0;
+    border-radius: 1em;
+    padding: 0.45em 0.9em;
+    max-width: 70%;
+    font-weight:300;
+}
+
+[class*="messageBody_"] code:not(pre > code) {
+    font-family:'Ubuntu Mono', monospace;
+}
+[class*="messageBody_"] em {
+    font-family:'Inter', sans-serif;
+}
+[class*="messageBody_"] strong {
+    font-weight:800;
+    letter-spacing:0.3px;
+    text-decoration:underline solid 1px;
+}
+[class*="messageBody_"] span {
+    font-weight:600;
+}
+[class*="messageAvatarContainer_"]{
+    display: flex;
+    align-items: flex-end;
+}
+img[class*="messageAvatarImage_"]{
+    border-radius:50%!important;
+    object-position:top;
+}
+:is(button[class*="controlPanelButton_"], button[class*="footerActionButton_"]) svg{
+    color:#8e8e93!important;
+}
+[class*="messageControls_"]{
+    top: unset;
+    bottom: 1rem;
+    right: 0.6rem;
+}
+button[class*="scrollToBottomButton_"]{
+    border-radius:50%;
+    background:#ffffff9c;
+    border:none;
+}
+button[class*="scrollToBottomButton_"] svg{
+    color:#1d77c0;
+}
+
+[class*="botMessageControlWrapper_"] svg{
+    color:#8e8e93!important;
+}
+[class*="botChoicesSlider_"] [class*="messageControls_"]{
+    bottom: 3rem;
+}
+[class*="messageCounter_"]{
+    color:#8e8e93!important;
+    font-family:'Inter';
+    font-weight:400;
+}
+
+/* character messages */
+:is(div[data-index$="0"], div[data-index$="2"], div[data-index$="4"], div[data-index$="6"], div[data-index$="8"]){
+   [class*="messageBody_"] p {
+        background: #e5e5ea;
+       color:#000;
+    }
+    [class*="messageBody_"] .css-0:last-child p::after{
+        content: "";
+        position: absolute;
+        bottom: 0;
+        width: 0.625em;
+        height: 1em;
+        z-index: -1;
+        left: -0.55em;
+        border-right: 0.625em solid #e5e5ea;
+        border-bottom-right-radius: 1.25em 0.625em;
+    }
+        [class*="messageBody_"] .css-0:last-child::before{
+        content:'Read';
+        position:absolute;
+        left:63%;
+        bottom:-1rem;
+        color:#8e8e93;
+        font-size:11px;
+        font-weight:bold;
+        font-family:'Inter';
+    }
+    [class*="messageBody_"] code:not(pre > code) {
+        color:#000;
+    }
+    [class*="messageBody_"] em {
+        color:#000;
+    }
+    [class*="messageBody_"] strong {
+        color:#000;
+        text-decoration-color: #000;
+    }
+    [class*="messageBody_"] span {
+        color:#000!important;
+    }
+}
+
+/* user messages */
+:is(div[data-index$="1"], div[data-index$="3"], div[data-index$="5"], div[data-index$="7"], div[data-index$="9"]){
+    [class*="messageContent_"] {
+        flex-direction:row-reverse;
+    }
+    [class*="messageBody_"]{
+        text-align: right;
+    }
+    [class*="messageBody_"] p {
+        color:#eafafc;
+       background:#007aff;
+        margin-left: auto;
+    }
+    [class*="messageBody_"] .css-0:last-child p::after{
+        content: "";
+        position: absolute;
+        bottom: 2px;
+        width: 0.625em;
+        height: 1em;
+        z-index: -1;
+        right: -0.55em;
+        border-left: 0.625em solid #007aff;
+        border-bottom-left-radius: 1.25em 0.625em;
+    }
+    [class*="messageBody_"] .css-0:last-child::before{
+        content:'Delivered';
+        position:absolute;
+        left:30%;
+        bottom:-1rem;
+        color:#8e8e93;
+        font-size:11px;
+        font-weight:bold;
+        font-family:'Inter';
+    }
+    div:has(>[class*="nameContainer_"]){
+        padding:unset;
+    }
+    [class*="nameContainer_"]{
+        justify-content: flex-end;
+    }
+    [class*="messageFooter_"]{
+        right:0;
+        bottom: -1.9rem;
+    }
+    [class*="messageBody_"] code:not(pre > code) {
+        color:#eafafc;
+    }
+    [class*="messageBody_"] em {
+        color:#eafafc;
+    }
+    [class*="messageBody_"] strong {
+        color:#fff;
+        text-decoration-color: #eafafc;
+    }
+    [class*="messageBody_"] span {
+        color:#eafafc!important;
+    }
+    hr{
+        margin-left:auto;
+    }
+}
+
+/* menu and pop ups */
+[class*="autoResizeTextarea_"]{
+    font-family:'Ubuntu Mono',monospace!important;
+    background:#e5e5ea;
+    border-radius:30px;
+    color:#000!important;
+}
+
+[class*="enlargedAvatarOverlay_"] {
+    background:#F7F7F7;
+    border:1px solid grey;
+}
+[class*="enlargedAvatarOverlay_"] svg{color:#007aff!important;}
+[class*="menuList_"], [class*="menuList_"]:is([class*="compact_"]), [aria-label="Close modal"]>div{
+    background:rgba(255, 255, 255, 0.9);
+    padding: 16px;
+    border-radius: 16px;
+    backdrop-filter:blur(2px);
+}
+[class*="menuList_"] button{
+    font-family:'Geist';
+    color:#000!important;
+    font-weight:400;
+    transition: opacity 400ms ease-in-out;
+}
+[class*="menuItemIcon_"]{
+    color:#3783f5!important;
+}
+[class*="menuList_"] button:hover{
+    opacity:0.6;
+}
+[aria-label="Close modal"] button{background:#fff;color:#007AFF;border:1px solid rgb(220, 224, 226);}
+[aria-label="Close modal"] button:is(:hover,:focus,:active){background:rgb(250,250,250);color:#007AFF!important;}
+[aria-label="Close modal"] *{font-family:'Inter';color:#000;}
+[class*="soundcloudPlayer_"]{display:none;}
