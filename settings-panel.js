@@ -413,6 +413,8 @@ async function initSettingsPanel() {
   const textDecorationListEl = document.getElementById("text-decoration-list");
   const messageColorHelpEl = document.getElementById("message-color-help");
   const popupThemePickerEl = document.getElementById("popup-theme-picker");
+  const cursorEnabledInput = document.getElementById("cursor-enabled"); // settings page only
+  const cursorSizeInput = document.getElementById("cursor-size");
 
   const data = await chrome.storage.local.get([
     STORAGE_KEYS.activeTheme,
@@ -447,6 +449,13 @@ async function initSettingsPanel() {
     if (textBgListEl) renderTextBgList(textBgListEl, themeId, textBgColors);
     if (textDecorationListEl) renderTextDecorationList(textDecorationListEl, themeId, textDecorationColors, config.slots);
     if (messageColorHelpEl) messageColorHelpEl.hidden = !config.separateMessages;
+    if (cursorEnabledInput && cursorSizeInput) {
+      const cursor = getCursorSettings(storageData, themeId);
+      cursorEnabledInput.checked = cursor.enabled;
+      cursorEnabledInput.disabled = !themeId;
+      cursorSizeInput.value = cursor.size === null ? "" : String(cursor.size);
+      cursorSizeInput.disabled = !themeId || !cursor.enabled;
+    }
     document.querySelectorAll("#text-color-list input, #text-color-list button, #text-bg-list input, #text-bg-list button, #text-decoration-list input, #text-decoration-list button, #bg-url, #reset-bg").forEach((control) => {
       control.disabled = !themeId;
     });
@@ -477,6 +486,22 @@ async function initSettingsPanel() {
   });
 
   if (popupThemePickerEl) initPopupThemePicker(popupThemePickerEl);
+
+  if (cursorEnabledInput && cursorSizeInput) {
+    cursorEnabledInput.addEventListener("change", () => {
+      cursorSizeInput.disabled = !currentlyShownThemeId() || !cursorEnabledInput.checked;
+      setPerThemeField(currentlyShownThemeId(), "cursorEnabled", cursorEnabledInput.checked);
+    });
+    cursorSizeInput.addEventListener("change", () => {
+      const themeId = currentlyShownThemeId();
+      if (cursorSizeInput.value === "") {
+        clearPerThemeField(themeId, "cursorSize");
+      } else {
+        const size = Number(cursorSizeInput.value);
+        if (CURSOR_SIZES.includes(size)) setPerThemeField(themeId, "cursorSize", size);
+      }
+    });
+  }
 
 
   chrome.storage.onChanged.addListener((changes, areaName) => {

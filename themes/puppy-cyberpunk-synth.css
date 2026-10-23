@@ -414,3 +414,11 @@ img[alt="clouds left"], img[alt="clouds right"], img[alt="User Avatar Border"]{v
 	color:#ff007f!important;
 	stroke:3;
 }
+
+/* proxy menu fix guh */
+@media screen and (max-width:768px){
+	[class*="panel_"][class*="docs_"]{
+		opacity:1!important;
+		transform:none!important;
+	}
+}

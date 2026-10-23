@@ -485,3 +485,11 @@ img[alt="Character Icon"],[class*="nameText_"]+*{filter:sepia(1);}
         [class*="nameContainer_"] {margin:unset;}
     }
 }
+
+/* proxy menu fix guh */
+@media screen and (max-width:768px){
+	[class*="panel_"][class*="docs_"]{
+		opacity:1!important;
+		transform:none!important;
+	}
+}

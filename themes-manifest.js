@@ -95,6 +95,15 @@ const STORAGE_KEYS = {
 };
 
 const MAX_POPUP_THEMES = 3;
+const CURSOR_SIZES = [16, 24, 32, 48, 64, 96, 128];
+
+function getCursorSettings(storageData, themeId) {
+  const entry = (storageData[STORAGE_KEYS.perThemeOverrides] || {})[themeId] || {};
+  return {
+    enabled: entry.cursorEnabled !== false,
+    size: CURSOR_SIZES.includes(entry.cursorSize) ? entry.cursorSize : null
+  };
+}
 
 function getEffectiveOverridesForTheme(storageData, themeId) {
   const perTheme = (storageData[STORAGE_KEYS.perThemeOverrides] || {})[themeId];

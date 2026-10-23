@@ -951,4 +951,10 @@ hr {
     [class*="chatInputContainer_"]{grid-template-columns: 1fr 0.4fr;}
     [class*="chatInputWrapper_"]{grid-area: 1;}
 }
-
+/* proxy menu fix guh */
+@media screen and (max-width:768px){
+	[class*="panel_"][class*="docs_"]{
+		opacity:1!important;
+		transform:none!important;
+	}
+}

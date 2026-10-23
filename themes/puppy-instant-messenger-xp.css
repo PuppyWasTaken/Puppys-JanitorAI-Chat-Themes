@@ -468,3 +468,10 @@ button[class*="scrollToBottomButton_"]{filter:none;top:10%;}
 	background: white;
 }
 [class*="soundcloudResponsive_"]{filter: none !important;}
+/* proxy menu fix guh */
+@media screen and (max-width:768px){
+	[class*="panel_"][class*="docs_"]{
+		opacity:1!important;
+		transform:none!important;
+	}
+}

@@ -27,6 +27,25 @@ body.manage-page .text-color-list {
 body.manage-page .radio-label {
   font-size: 14px;
 }
+
+.cursor-size-row {
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+#cursor-size {
+  padding: 6px 8px;
+  border: 1px solid #8db6b5;
+  border-radius: 6px;
+  background: #fff;
+  color: #5c554a;
+  font: inherit;
+}
+
+#cursor-size:disabled {
+  opacity: 0.55;
+}
 body.manage-page .bg-row {
   flex-wrap: wrap;
 }

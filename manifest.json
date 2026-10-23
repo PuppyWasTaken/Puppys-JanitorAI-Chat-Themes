@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "JanitorAI Chat Theme Overlay",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Puppy's Chat Theme Overlays! Overlay custom designs on your JanitorAI chat pages with user-adjustable background and text colors.",
   "permissions": [
     "storage",
@@ -30,7 +30,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "themes/*.css"
+        "themes/*.css",
+        "cursors/*.png"
       ],
       "matches": [
         "https://janitorai.com/*"

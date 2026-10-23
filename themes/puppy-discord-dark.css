@@ -8,7 +8,7 @@
 
 
 *, body{
-    cursor: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppydarkminimalcursor.png"), auto;
+    cursor: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppyminimallightcursor.png"), auto;
 }
 
 
@@ -365,3 +365,10 @@ body:has([class*="menuList_"]:not(:is([class*="compact_"])):is([class*="open_"])
 [aria-label="Close modal"] *{font-family:'Hanken Grotesk';color:#fdfdfd;}
 [class*="soundcloudPlayer_"]{display:none;}
 button:is([class*="menuButton_"],[class*="controlPanelButton_"],[aria-label="More actions"],[aria-label="Continue this message"],[class*="botChoiceButton_"],[aria-label="Edit"],[class*="footerActionButton_"]){background:transparent!important;}
+/* proxy menu fix guh */
+@media screen and (max-width:768px){
+	[class*="panel_"][class*="docs_"]{
+		opacity:1!important;
+		transform:none!important;
+	}
+}

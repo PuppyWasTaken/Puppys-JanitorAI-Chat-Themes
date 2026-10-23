@@ -27,6 +27,27 @@
 
     <hr />
 
+    <h2>Custom cursor</h2>
+    <p id="cursor-help">Use the theme's cursor or your normal browser cursor. Saved per theme; changes apply automatically on chat pages.</p>
+    <div class="checkbox-row">
+      <input type="checkbox" id="cursor-enabled" aria-describedby="cursor-help" />
+      <label for="cursor-enabled">Use custom cursor</label>
+    </div>
+    <div class="field-row cursor-size-row">
+      <label for="cursor-size">Cursor size</label>
+      <select id="cursor-size" aria-describedby="cursor-size-help">
+        <option value="">Theme default</option>
+        <option value="16">16 px</option>
+        <option value="24">24 px</option>
+        <option value="32">32 px</option>
+        <option value="48">48 px</option>
+        <option value="64">64 px</option>
+        <option value="96">96 px</option>
+        <option value="128">128 px</option>
+      </select>
+    </div>
+    <p id="cursor-size-help">Size is the cursor's longest edge; its proportions stay the same. Theme default restores the original image size.</p>
+
     <h2 data-tooltip="Saved per theme — switch themes and this switches with it.">Background image</h2>
     <div class="field-row">
       <input type="text" id="bg-url" placeholder="Paste an image URL…" />
@@ -43,7 +64,7 @@
 
     <h2 id="text-backgrounds" data-tooltip="Add or change the box behind each kind of text, like the highlight on dialogue or code. None removes it; Reset goes back to the theme's own. Saved per theme.">Text backgrounds</h2>
     <div id="text-bg-list" class="text-color-list">
-      <!-- One row per TEXT_SLOTS entry, injected by settings-panel.js -->
+
     </div>
     <h2 id="text-decorations">Text decoration colours</h2>
     <p>Choose a decoration colour for each text type. Uses the theme's line style and thickness, or a 1px solid underline when none is defined. Reset restores the original theme decoration.</p>

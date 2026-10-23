@@ -7,7 +7,7 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
 
 *, body{
-    cursor: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppylightminimalcursor.png"), auto;
+    cursor: url("https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/puppyminimaldarkcusor.png"), auto;
 }
 
 
@@ -448,3 +448,10 @@ button[class*="scrollToBottomButton_"] svg{
 [aria-label="Close modal"] button:is(:hover,:focus,:active){background:rgb(250,250,250);color:#007AFF!important;}
 [aria-label="Close modal"] *{font-family:'Inter';color:#000;}
 [class*="soundcloudPlayer_"]{display:none;}
+/* proxy menu fix guh */
+@media screen and (max-width:768px){
+	[class*="panel_"][class*="docs_"]{
+		opacity:1!important;
+		transform:none!important;
+	}
+}

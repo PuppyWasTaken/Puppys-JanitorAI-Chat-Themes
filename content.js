@@ -13,6 +13,15 @@
 
   const THEME_STYLE_ATTR = "data-jc-theme-id";
   const OVERRIDE_STYLE_ID = "jc-user-overrides";
+  const CURSOR_ASSET_ROOT = "https://file.garden/aWyedZylm2AE_XoC/Extension%20Assets/";
+  const CURSOR_ASSET_FILES = [
+    "puppyanalogcursor.png",
+    "puppycottagecursor.png",
+    "puppycybercusor.png",
+    "puppyminimaldarkcusor.png",
+    "puppyminimallightcursor.png",
+    "puppyxpcursor.png"
+  ];
 
 
   const RELEVANT_STORAGE_KEYS = [
@@ -33,6 +42,10 @@
   let routeActive = true;
   let themeStyle = null;
   let overrideStyle = null;
+  let cursorDeclarations = [];
+  let cursorSheet = null;
+  let themeImports = "";
+  const resizedCursors = new Map();
   let reorderCount = 0;
   let reorderWindowStart = 0;
 
@@ -78,6 +91,9 @@
   function removeInjectedThemeStyles() {
     if (themeStyle) themeStyle.remove();
     themeStyle = null;
+    cursorDeclarations = [];
+    cursorSheet = null;
+    themeImports = "";
     document
       .querySelectorAll(`style[${THEME_STYLE_ATTR}]`)
       .forEach((el) => el.remove());
@@ -94,9 +110,21 @@
     try {
       const url = chrome.runtime.getURL(theme.file);
       const res = await fetch(url);
-      const css = await res.text();
+      let css = await res.text();
+      // Use packaged originals for both native-size and resized cursors,
+      // avoiding remote-image CORS and canvas-loading failures.
+      for (const file of CURSOR_ASSET_FILES) {
+        css = css.replaceAll(CURSOR_ASSET_ROOT + file, chrome.runtime.getURL(`cursors/${file}`));
+      }
 
       if (!isChatPage() || generation !== applyGeneration) return;
+      // Work on a detached sheet so moving the live <style> cannot discard
+      // cursor edits. Preserve complete import URLs, including semicolons.
+      const importPattern = /@import\s+(?:url\(\s*(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^)]*)\s*\)|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')[^;]*;/gi;
+      themeImports = (css.match(importPattern) || []).join("\n");
+      cursorSheet = new CSSStyleSheet();
+      cursorSheet.replaceSync(css.replace(importPattern, ""));
+      collectCursorDeclarations(cursorSheet.cssRules);
       const style = document.createElement("style");
       style.setAttribute(THEME_STYLE_ATTR, theme.id);
       style.textContent = css;
@@ -105,6 +133,97 @@
     } catch (err) {
       console.error(`[JAI Theme Overlay] Failed to load theme "${theme.id}":`, err);
     }
+  }
+
+  function renderCursorTheme() {
+    if (!themeStyle || !cursorSheet) return;
+    const css = themeImports + "\n" + [...cursorSheet.cssRules].map((rule) => rule.cssText).join("\n");
+    // Persist edits in textContent so style reordering cannot reset the cursor.
+    if (themeStyle.textContent !== css) themeStyle.textContent = css;
+  }
+
+  // Keep the original declarations so disabling a custom cursor removes only
+  // the theme's image, not native link/text cursors or other theme styling.
+  function collectCursorDeclarations(rules) {
+    for (const rule of rules) {
+      if (rule.style) {
+        const value = rule.style.getPropertyValue("cursor");
+        if (/url\(/i.test(value)) {
+          cursorDeclarations.push({
+            style: rule.style,
+            value,
+            priority: rule.style.getPropertyPriority("cursor")
+          });
+        }
+      }
+      if (rule.cssRules) collectCursorDeclarations(rule.cssRules);
+    }
+  }
+
+  function resizeCursorImage(url, size) {
+    const key = `${url}:${size}`;
+    if (!resizedCursors.has(key)) {
+      const result = (async () => {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Could not load cursor image: HTTP ${response.status}`);
+        // Decode packaged bytes directly into an origin-clean bitmap.
+        const image = await createImageBitmap(await response.blob());
+        try {
+          const scale = size / Math.max(image.width, image.height);
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(image.width * scale));
+          canvas.height = Math.max(1, Math.round(image.height * scale));
+          const context = canvas.getContext("2d");
+          if (!context) throw new Error("Canvas is unavailable for cursor resizing");
+          context.drawImage(image, 0, 0, canvas.width, canvas.height);
+          return { url: canvas.toDataURL("image/png"), scale, width: canvas.width, height: canvas.height };
+        } finally {
+          image.close();
+        }
+      })();
+      resizedCursors.set(key, result);
+      // Failed requests may be retried on the next settings change.
+      result.catch(() => resizedCursors.delete(key));
+    }
+    return resizedCursors.get(key);
+  }
+
+  async function resizeCursorValue(value, size) {
+    // Preserve fallback cursors and scale explicit click hotspots as well.
+    const pattern = /url\(\s*(?:"([^"]*)"|'([^']*)'|([^)]*?))\s*\)(?:\s+(\d+)\s+(\d+))?/gi;
+    const matches = [...value.matchAll(pattern)];
+    const replacements = await Promise.all(matches.map(async (match) => {
+      const url = match[1] ?? match[2] ?? match[3];
+      if (!url) return match[0];
+      const resized = await resizeCursorImage(url, size);
+      const x = Math.min(resized.width - 1, Math.round(Number(match[4] || 0) * resized.scale));
+      const y = Math.min(resized.height - 1, Math.round(Number(match[5] || 0) * resized.scale));
+      return `url(${JSON.stringify(resized.url)}) ${x} ${y}`;
+    }));
+    let index = 0;
+    return value.replace(pattern, () => replacements[index++]);
+  }
+
+  async function applyCursorSettings(settings, generation) {
+    const declarations = cursorDeclarations;
+    // Restore immediately, so an old size never lingers while a new one loads.
+    for (const { style, value, priority } of declarations) {
+      if (settings.enabled) style.setProperty("cursor", value, priority);
+      else style.removeProperty("cursor");
+    }
+    renderCursorTheme();
+    if (!settings.enabled || settings.size === null) return;
+    await Promise.all(declarations.map(async ({ style, value, priority }) => {
+      try {
+        const resized = await resizeCursorValue(value, settings.size);
+        if (!isChatPage() || generation !== applyGeneration) return;
+        style.setProperty("cursor", resized, priority);
+      } catch (error) {
+        // Keep the original packaged cursor if decoding or resizing fails.
+        console.warn("[JAI Theme Overlay] Could not resize custom cursor:", error);
+      }
+    }));
+    if (isChatPage() && generation === applyGeneration) renderCursorTheme();
   }
 
 
@@ -191,6 +310,7 @@
 
     injectOverrides(activeThemeId, bgImageUrl, textColors, textBgColors, textDecorationColors, textConfig);
     ensureStyleOrder();
+    await applyCursorSettings(getCursorSettings(data, activeThemeId), generation);
   }
 
 
