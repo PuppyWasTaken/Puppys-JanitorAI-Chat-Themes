@@ -53,20 +53,23 @@
     left: 50%;
     transform: translateX(-50%);
 }
+[class*="triggerSparkle_"]{
+	display:none;
+}
 [class*="chatTextarea_"]::placeholder, [class*="chatTextarea_"]  {
    font-family: "Share Tech Mono", monospace;
 }
 [class*="sendButton_"]:disabled{
-    border: 1px solid #1e191a;
+    border: 1px solid #1e191a!important;
     border-radius: 0;
-    background: #f105ff59;
+    background: #f105ff59!important;
     box-shadow: 0 0 5px #00f3ff inset, 0 0 5px #00f3ff;
     clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
 }
 [class*="sendButton_"]:not(:disabled), [class*="sendButton_"]{
-    border: 1px solid #1e191a;
-    border-radius: 0;
-    background: #00f3ff;
+    border: 1px solid #1e191a!important;
+    border-radius: 0!important;
+    background: #00f3ff!important;
     box-shadow: 0 0 5px #00f3ff inset, 0 0 5px #00f3ff;
     clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
 }
@@ -346,11 +349,11 @@ img[alt="clouds left"], img[alt="clouds right"], img[alt="User Avatar Border"]{v
 [class*="switcher_"]{    
     background: #f502ff40;
     border: 1px solid #05e2ff;
-    border-radius:0;
+    border-radius:0!important;
     transition: all 400ms ease;
 }
 [class*="switcher_"]:hover{background:#5f91cc61;border-color:white;}
-[class*="triggerName_"]{font-family: "Share Tech", sans-serif;}
+[class*="triggerName_"], [class*="switcher_"] [class*="label_"]{font-family: "Share Tech", sans-serif;color:rgb(5, 226, 255);}
 
 /* menu stuff */
 [class*="menuList_"], [class*="menuList_"]:is([class*="compact_"]) {

@@ -140,22 +140,28 @@ div:has(>[class*="desktopBackBtn_"]){order:1;}
 }
 
 [class*="sendButton_"], [class*="sendButton_"]:is(:hover,:focus,:active),[class*="sendButton_"]:hover:not(:disabled){
-    border-radius:8px;
-    background:#5865f2;
+    border-radius:8px!important;
+    background:#5865f2!important;
     border:none;
 }
 [class*="sendButton_"] svg{display:none;}
 [class*="sendButton_"]:disabled{
-    background:#3d3d40;
+    background:#3d3d40!important;
     border:none;
     border-radius:8px;
 }
 [class*="sendButton_"]::after{
     content:'\f1d8';
     font-family:'Fontawesome';
-    color:#fff;
-    
+    color:#fff;   
 }
+[class*="controlsRight_"], div:has(>[aria-label="Send"]){
+	order:2;
+}
+[class*="controlsRight_"] [class*="icon_"], div:has(>[aria-label="Send"]) [class*="icon_"]{
+	display:none;
+}
+
 
 /* universal chat styling */
 [class*="disclaimer_"]{

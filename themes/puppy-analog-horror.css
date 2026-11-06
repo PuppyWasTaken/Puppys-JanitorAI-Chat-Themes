@@ -429,18 +429,25 @@ img[alt*="clouds"], [class*="frameContainer_"]{visibility:hidden;}
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9), 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 [class*="_controlsLeft_"]{flex-direction:row-reverse;}
-button[class*="switcher_"] {
-    border-radius: 999px;
-    padding: 0.1rem;
+button[class*="switcher_"],[class*="switcher_"][class*="switcher_"]{
+    border-radius: 999px!important;
+    padding: 0.1rem!important;
     border: 4px solid #e1c028;
     background: #222;
     width: 27.19px;
     height: 27.19px;
+	gap:0;
 }
-button[class*="switcher_"] img{border-radius:50%;}
+button[class*="switcher_"] span:has(img){
+	padding:0.1rem;
+}
+button[class*="switcher_"] img, [class*="switcher_"][class*="triggerAvatar_"]{border-radius:50%!important;padding: 0.1rem;}
 button[class*="switcher_"] span{font-size:0;}
 button[class*="switcher_"]{
 	gap:0;
+}
+[class*="trailing_"]{
+	display:none;
 }
 [class*="_controlsLeft_"] {
     flex-direction: row-reverse;
@@ -473,24 +480,28 @@ div:has(>button[class*="switcher_"])::before {
 	color:#a5a09b;
 	font-family:Arial, Helvetica, sans-serif;
 }
-button[aria-label="Send"]{
-	flex-direction: column;
-    width: max-content;
-    height: stretch;
-	justify-content: flex-start;
-	background:transparent!important;
-	border:none!important;
-	color:#a5a09b!important;
+button[aria-label="Send"] {
+    flex-direction: column;
+    width: max-content !important;
+    height: stretch !important;
+    justify-content: flex-start !important;
+    background: transparent !important;
+    border-width: medium !important;
+    border-style: none !important;
+    border-color: currentcolor !important;
+    border-image: none !important;
+    color: rgb(165, 160, 155) !important;
+    gap: 1px;
 }
-button[aria-label="Send"] svg{
-	padding: 0.1rem;
-    height: 27.19px;
-    width: 27.19px;
-	border-radius:999px;
-    border: 4px solid #b83526;
-    background: #222;
+button[aria-label="Send"] svg, [class*="sendButton_"] svg, [class*="sendIcon_"] {
+    padding: 0.1rem;
+    height: 27.19px !important;
+    width: 27.19px !important;
+    border-radius: 999px;
+    border: 4px solid rgb(184, 53, 38);
+    background: rgb(34, 34, 34);
 }
-button[aria-label="Send"]:disabled{
+button[aria-label="Send"]:disabled,[class*="_sendButton_"][class*="_sendButton_"]:disabled{
 	opacity:1;
 	background:transparent;
 	border:none;

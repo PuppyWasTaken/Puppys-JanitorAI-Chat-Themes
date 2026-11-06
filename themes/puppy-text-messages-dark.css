@@ -138,15 +138,18 @@ div:has(>[class*="desktopBackBtn_"]){order:1;}
 }
 
 [class*="sendButton_"], [class*="sendButton_"]:is(:hover,:focus,:active),[class*="sendButton_"]:hover:not(:disabled){
-    border-radius:50%;
-    background:#1d77c0;
+    border-radius:50%!important;
+    background:#1d77c0!important;
     border:none;
 }
 [class*="sendButton_"] svg{color:#fff!important;}
 [class*="sendButton_"]:disabled{
-    background:#1d77c080;
+    background:#1d77c080!important;
     border:none;
-    border-radius:50%;
+    border-radius:50%!important;
+}
+[class*="controlsRight_"], div:has(>[aria-label="Send"]){
+	order:3;
 }
 
 /* universal chat styling */

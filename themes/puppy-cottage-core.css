@@ -145,6 +145,9 @@ img[alt*="clouds"]{visibility:hidden;}
     top:1.2rem;
     left:3.5rem;
 }
+[class*="controlsRow_"]{
+	padding-left:2rem;
+}
 [class*="chatInputInner_"]{
     border-radius:50px;
     background: #a2b44863;
@@ -166,15 +169,18 @@ img[alt*="clouds"]{visibility:hidden;}
     bottom:-8.5rem;
 }
 button[class*="switcher_"], button[aria-label="Send"], button[aria-label="Scroll to bottom"]{
-    background: #556f3069;
-    border: 2px dotted #eff3be;
-    border-radius: 20px;
+    background: #556f3069!important;
+    border: 2px dotted #eff3be!important;
+    border-radius: 20px!important;
 }
-button[class*="switcher_"] img{border-radius:50%;}
+button[class*="switcher_"] img{border-radius:50%!important;}
 button[class*="switcher_"] span{font-family:'Josefin Slab';color:#eff3be;}
 button[aria-label="Send"]{
     position:relative;
     right:1rem;
+}
+[class*="trailing_"]{
+	display:none;
 }
 [class*="chatTextarea_"], [class*="chatTextarea_"]::placeholder{
     font-family:'Josefin Slab'!important;
