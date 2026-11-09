@@ -717,7 +717,7 @@ display:none;
     width: 100%;
 }
 [class*="_messageBody_"] textarea{
-background: linear-gradient(180deg, #26221f 0%, #1a1715 100%);
+background: linear-gradient(180deg, #26221f 0%, #1a1715 100%)!important;
     border: 1px solid #36312c!important;
     border-radius: 0px;
     box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.9);
@@ -725,6 +725,19 @@ background: linear-gradient(180deg, #26221f 0%, #1a1715 100%);
     color: #e5a93b !important;
     font-family:'Genos'!important;
     font-size:1rem!important;
+}
+[class*="editor_"] [class*="mirror_"]{
+	display:none;
+}
+[class*="editor_"] [class*="field_"]{
+	background:transparent!important;
+}
+[class*="assistantControls_"] button{
+	background: linear-gradient(rgb(89, 81, 73), rgb(63, 57, 51));
+    border: 1px solid rgb(17, 17, 17);
+    border-radius: 6px;
+	font-family: "Courier New", Courier, monospace;
+	color:rgb(165, 160, 155);
 }
 
 [class*="messageContent_"], [class*="messageBody_"],[class*="messageNameContainerCopying_"]{

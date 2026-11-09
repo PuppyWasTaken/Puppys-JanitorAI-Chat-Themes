@@ -179,7 +179,7 @@ hr::after {
     background: #ff2a6d;
 }
 
-[class*="messageFooterActions_"] button, [class*="messageControls_"] button{
+[class*="messageFooterActions_"] button, [class*="messageControls_"] button, [class*="assistantControls_"] button{
     border-radius:0!important;
     background: rgba(5, 21, 37, 0.7);
     position: relative;
@@ -188,7 +188,7 @@ hr::after {
     color: #05d9e8;
     text-shadow: 0 0 4px #05d9e8;
 }
-:is([class*="messageFooterActions_"], [class*="messageControls_"]) button::before {
+:is([class*="messageFooterActions_"], [class*="messageControls_"], [class*="assistantControls_"]) button::before {
     content: '';
     position: absolute;
     top: -5px;
@@ -199,7 +199,7 @@ hr::after {
     border-left: 2px solid #ff2a6d;
     box-shadow: -4px -4px 10px rgba(255, 42, 109, 0.5);
 }
-:is([class*="messageFooterActions_"], [class*="messageControls_"]) button::after {
+:is([class*="messageFooterActions_"], [class*="messageControls_"], [class*="assistantControls_"]) button::after {
     content: '';
     position: absolute;
     bottom: -5px;

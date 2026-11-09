@@ -419,9 +419,22 @@ button[class*="scrollToBottomButton_"] svg{
 /* menu and pop ups */
 [class*="autoResizeTextarea_"]{
     font-family:'Ubuntu Mono',monospace!important;
-    background:#e5e5ea;
+    background:#e5e5ea!important;
     border-radius:30px;
     color:#000!important;
+	border:1px solid rgba(29, 119, 192, 0.5)!important;
+}
+[class*="editor_"] [class*="mirror_"]{
+	display:none;
+}
+[class*="editor_"] [class*="field_"]{
+	background:transparent!important;
+}
+[class*="assistantControls_"] button{
+	background:rgba(29, 119, 192, 0.5) !important;
+	font-family:'Ubuntu Mono',monospace!important;
+	color:#fff;
+	border:none;
 }
 
 [class*="enlargedAvatarOverlay_"] {

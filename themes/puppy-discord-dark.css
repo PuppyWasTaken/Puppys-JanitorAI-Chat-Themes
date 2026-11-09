@@ -205,7 +205,19 @@ hr{
 }
 [class*="messageContent_"]{transition:background 250ms ease-in-out;}
 [class*="messageDisplayWrapper_"]:is(:hover,:focus,:active) [class*="messageContent_"], [class*="messageContent_"]:is(:hover,:focus,:active), [class*="messageContent_"]:has([class*="autoResizeTextarea_"]){
-    background:color-mix(in oklab,hsl(240 calc(1*4%) 60.784%/0.12156862745098039) 100%,hsl(0 0% 0% /0.12156862745098039) 0%);
+    background:color-mix(in oklab,hsl(240 calc(1*4%) 60.784%/0.12156862745098039) 100%,hsl(0 0% 0% /0.12156862745098039) 0%)!important;
+}
+[class*="editor_"] [class*="mirror_"]{
+	display:none;
+}
+[class*="editor_"] [class*="field_"]{
+	background:transparent!important;
+}
+[class*="assistantControls_"] button{
+	background:rgb(88, 101, 242)!important;
+	font-family:'Source Code Pro', monospace;
+	color:rgb(171, 172, 178);
+	border:none;
 }
 [class*="nameContainer_"] svg, [class*="nameContainer_"] img{display:none;}
 [class*="nameContainer_"]:has(svg,img) [class*="nameText_"]::after{

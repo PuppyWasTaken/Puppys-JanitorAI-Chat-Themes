@@ -168,7 +168,7 @@ img[alt*="clouds"]{visibility:hidden;}
     transform:translateX(-50%);
     bottom:-8.5rem;
 }
-button[class*="switcher_"], button[aria-label="Send"], button[aria-label="Scroll to bottom"]{
+button[class*="switcher_"], button[aria-label="Send"], button[aria-label="Scroll to bottom"], [class*="assistantControls_"] button{
     background: #556f3069!important;
     border: 2px dotted #eff3be!important;
     border-radius: 20px!important;

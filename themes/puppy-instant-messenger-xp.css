@@ -397,7 +397,7 @@ img[class*="messageAvatarImage_"]{
     padding-bottom:2rem;
 }
 [class*="messageFooterActions_"]{margin:unset;}
-button[class*="controlPanelButton_"], button[class*="footerActionButton_"], button[class*="sendButton_"], button[aria-label="Commands"], button[class*="stopButton_"], button[class*="scrollToBottomButton_"], button[class*="botChoiceButton_"], button[class*="editPanelButton_"], [aria-label="Close modal"] button {
+button[class*="controlPanelButton_"], button[class*="footerActionButton_"], button[class*="sendButton_"], button[aria-label="Commands"], button[class*="stopButton_"], button[class*="scrollToBottomButton_"], button[class*="botChoiceButton_"], button[class*="editPanelButton_"], [aria-label="Close modal"] button, [class*="assistantControls_"] button{
     min-width: 75px;
     min-height: 23px;
     width: 75px !important;
@@ -447,10 +447,19 @@ button[class*="scrollToBottomButton_"]{filter:none;top:10%;}
 [class*="autoResizeTextarea_"]{
     font-family: Perfect DOS VGA\ 437 Win!important;
     padding: 12px 8px;
-    background-color: #000;
+    background-color: #000!important;
     color: silver!important;
     font-size: 1rem;
     border-radius:0;
+}
+[class*="editor_"] [class*="mirror_"]{
+	display:none;
+}
+[class*="editor_"] [class*="field_"]{
+	background:transparent!important;
+}
+[class*="assistantControls_"] button{
+	color:#000;
 }
 
 [class*="enlargedAvatarOverlay_"] {
